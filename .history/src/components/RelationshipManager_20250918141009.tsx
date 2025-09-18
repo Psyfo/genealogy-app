@@ -1,0 +1,779 @@
+"use client";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { Person } from "@/types/person";
+
+import {
+  Calendar,
+  CaretDown,
+  CaretUp,
+  Heart,
+  MagnifyingGlass,
+  MapPin,
+  Plus,
+  Trash,
+  User,
+  UserCircle,
+  Users,
+  X,
+} from '@phosphor-icons/react';
+
+interface RelationshipManagerProps {
+  person: Person;
+  onClose: () => void;
+  onUpdate: () => void;
+}
+
+export default function RelationshipManager({ person, onClose, onUpdate }: RelationshipManagerProps) {
+  const [allPeople, setAllPeople] = useState<Person[]>([]);
+  const [familyMembers, setFamilyMembers] = useState<{
+    parents: Person[];
+    children: Person[];
+    siblings: Person[];
+  }>({ parents: [], children: [], siblings: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedSections, setExpandedSections] = useState({
+    parents: true,
+    children: true,
+    siblings: true
+  });
+  const [selectedPerson, setSelectedPerson] = useState<string>('');
+  const [relationshipType, setRelationshipType] = useState<'father' | 'mother'>('father');
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure we're on the client side before rendering the portal
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Prevent body scrolling when modal is open
+  useEffect(() => {
+    if (isClient) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isClient]);
+
+  useEffect(() => {
+    loadData();
+  }, [person.id]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [peopleResponse, familyResponse] = await Promise.all([
+        fetch('/api/people'),
+        fetch(`/api/relationships?personId=${person.id}`)
+      ]);
+      
+      if (!peopleResponse.ok) {
+        throw new Error('Failed to fetch people');
+      }
+      if (!familyResponse.ok) {
+        throw new Error('Failed to fetch family members');
+      }
+      
+      const people = await peopleResponse.json();
+      const family = await familyResponse.json();
+      
+      setAllPeople(people.filter((p: Person) => p.id !== person.id));
+      setFamilyMembers(family);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleRemoveRelationship = async (parentId: string) => {
+    try {
+      const response = await fetch('/api/relationships', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'remove',
+          childId: person.id,
+          parentId
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || errorData.error || 'Failed to remove relationship');
+      }
+
+      await loadData();
+      onUpdate();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to remove relationship');
+    }
+  };
+
+  const getAvailableParents = () => {
+    const currentParentIds = familyMembers.parents.map(p => p.id);
+    return allPeople.filter(p => !currentParentIds.includes(p.id));
+  };
+
+  const getFilteredPeople = () => {
+    const availableParents = getAvailableParents();
+    if (!searchTerm) return availableParents;
+    
+    return availableParents.filter(p => 
+      formatPersonName(p).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.birthDate?.includes(searchTerm) ||
+      p.occupation?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const formatPersonName = (p: Person) => {
+    return `${p.firstName} ${p.lastName}`.trim();
+  };
+
+  const formatPersonDetails = (p: Person) => {
+    const details = [];
+    if (p.birthDate) {
+      details.push(`Born ${new Date(p.birthDate).getFullYear()}`);
+    }
+    if (p.occupation) {
+      details.push(p.occupation);
+    }
+    return details.join(' • ');
+  };
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const handleAddRelationship = async () => {
+    if (!selectedPerson) return;
+    
+    try {
+      const response = await fetch('/api/relationships', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'add',
+          childId: person.id,
+          parentId: selectedPerson,
+          relationshipType
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || errorData.error || 'Failed to add relationship');
+      }
+
+      await loadData();
+      onUpdate();
+      setSelectedPerson('');
+      setSearchTerm('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add relationship');
+    }
+  };
+
+  if (loading) {
+    const loadingModal = (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading relationships...</p>
+          </div>
+        </div>
+      </div>
+    );
+    
+    return isClient ? createPortal(loadingModal, document.body) : null;
+  }
+
+  const modalContent = (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="modal-header">
+          <div className="header-content">
+            <h2 className="modal-title">
+              <Heart className="title-icon" weight="fill" />
+              Family Relationships
+            </h2>
+            <p className="modal-subtitle">Manage family connections for {formatPersonName(person)}</p>
+          </div>
+          <button
+            className="close-btn"
+            onClick={onClose}
+            aria-label="Close relationships"
+          >
+            <X className="close-icon" weight="bold" />
+          </button>
+        </div>
+
+        {/* Person Info Card */}
+        <div className="person-card">
+          <div className="person-avatar">
+            <UserCircle className="avatar-icon" weight="fill" />
+          </div>
+          <div className="person-details">
+            <h3 className="person-name">{formatPersonName(person)}</h3>
+            <div className="person-meta">
+              {person.birthDate && (
+                <span className="meta-item">
+                  <Calendar className="meta-icon" weight="regular" />
+                  Born {new Date(person.birthDate).getFullYear()}
+                </span>
+              )}
+              {person.birthPlace && (
+                <span className="meta-item">
+                  <MapPin className="meta-icon" weight="regular" />
+                  {person.birthPlace}
+                </span>
+              )}
+              {person.occupation && (
+                <span className="meta-item">
+                  <User className="meta-icon" weight="regular" />
+                  {person.occupation}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message">
+            <div className="error-content">
+              <span className="error-text">{error}</span>
+              <button 
+                className="error-dismiss"
+                onClick={() => setError(null)}
+              >
+                <X className="error-close" weight="bold" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Relationship Sections */}
+        <div className="relationship-sections">
+          {/* Parents Section */}
+          <div className="relationship-section">
+            <div 
+              className="section-header"
+              onClick={() => toggleSection('parents')}
+            >
+              <div className="section-title">
+                <User className="section-icon" weight="regular" />
+                <span>Parents</span>
+                <span className="section-count">({familyMembers.parents.length})</span>
+              </div>
+              {expandedSections.parents ? 
+                <CaretUp className="expand-icon" weight="bold" /> : 
+                <CaretDown className="expand-icon" weight="bold" />
+              }
+            </div>
+            
+            {expandedSections.parents && (
+              <div className="section-content">
+                <div className="relationship-list">
+                  {familyMembers.parents.map((parent) => (
+                    <div key={parent.id} className="relationship-item">
+                      <div className="person-info">
+                        <div className="person-avatar-small">
+                          <UserCircle className="avatar-icon-small" weight="fill" />
+                        </div>
+                        <div className="person-details">
+                          <span className="person-name">{formatPersonName(parent)}</span>
+                          <span className="person-meta">{formatPersonDetails(parent)}</span>
+                          <span className="relationship-type">
+                            {parent.id === person.fatherId ? 'Father' : 'Mother'}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        className="remove-btn"
+                        onClick={() => handleRemoveRelationship(parent.id)}
+                        aria-label={`Remove ${parent.id === person.fatherId ? 'father' : 'mother'}`}
+                      >
+                        <Trash className="remove-icon" weight="regular" />
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {familyMembers.parents.length === 0 && (
+                    <div className="empty-state">
+                      <User className="empty-icon" weight="regular" />
+                      <p>No parents added yet</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add Parent Form */}
+                {getAvailableParents().length > 0 && (
+                  <div className="add-relationship-form">
+                    <div className="form-header">
+                      <h4>Add Parent</h4>
+                    </div>
+                    <div className="form-content">
+                      <div className="search-container">
+                        <MagnifyingGlass className="search-icon" weight="regular" />
+                        <input
+                          type="text"
+                          placeholder="Search people..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="search-input"
+                        />
+                      </div>
+                      
+                      <div className="relationship-type-selector">
+                        <label className="radio-option">
+                          <input
+                            type="radio"
+                            name="relationshipType"
+                            value="father"
+                            checked={relationshipType === 'father'}
+                            onChange={(e) => setRelationshipType(e.target.value as 'father' | 'mother')}
+                          />
+                          <span className="radio-label">Father</span>
+                        </label>
+                        <label className="radio-option">
+                          <input
+                            type="radio"
+                            name="relationshipType"
+                            value="mother"
+                            checked={relationshipType === 'mother'}
+                            onChange={(e) => setRelationshipType(e.target.value as 'father' | 'mother')}
+                          />
+                          <span className="radio-label">Mother</span>
+                        </label>
+                      </div>
+
+                      <div className="person-selector">
+                        <select
+                          className="person-select"
+                          value={selectedPerson}
+                          onChange={(e) => setSelectedPerson(e.target.value)}
+                        >
+                          <option value="">Select a person...</option>
+                          {getFilteredPeople().map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {formatPersonName(p)} {formatPersonDetails(p) && `- ${formatPersonDetails(p)}`}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <button
+                        className="add-btn"
+                        onClick={handleAddRelationship}
+                        disabled={!selectedPerson}
+                      >
+                        <Plus className="add-icon" weight="regular" />
+                        Add {relationshipType === 'father' ? 'Father' : 'Mother'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Children Section */}
+          <div className="relationship-section">
+            <div 
+              className="section-header"
+              onClick={() => toggleSection('children')}
+            >
+              <div className="section-title">
+                <Users className="section-icon" weight="regular" />
+                <span>Children</span>
+                <span className="section-count">({familyMembers.children.length})</span>
+              </div>
+              {expandedSections.children ? 
+                <CaretUp className="expand-icon" weight="bold" /> : 
+                <CaretDown className="expand-icon" weight="bold" />
+              }
+            </div>
+            
+            {expandedSections.children && (
+              <div className="section-content">
+                <div className="relationship-list">
+                  {familyMembers.children.map((child) => (
+                    <div key={child.id} className="relationship-item">
+                      <div className="person-info">
+                        <div className="person-avatar-small">
+                          <UserCircle className="avatar-icon-small" weight="fill" />
+                        </div>
+                        <div className="person-details">
+                          <span className="person-name">{formatPersonName(child)}</span>
+                          <span className="person-meta">{formatPersonDetails(child)}</span>
+                          <span className="relationship-type">Child</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {familyMembers.children.length === 0 && (
+                    <div className="empty-state">
+                      <Users className="empty-icon" weight="regular" />
+                      <p>No children added yet</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Siblings Section */}
+          <div className="relationship-section">
+            <div 
+              className="section-header"
+              onClick={() => toggleSection('siblings')}
+            >
+              <div className="section-title">
+                <Users className="section-icon" weight="regular" />
+                <span>Siblings</span>
+                <span className="section-count">({familyMembers.siblings.length})</span>
+              </div>
+              {expandedSections.siblings ? 
+                <CaretUp className="expand-icon" weight="bold" /> : 
+                <CaretDown className="expand-icon" weight="bold" />
+              }
+            </div>
+            
+            {expandedSections.siblings && (
+              <div className="section-content">
+                <div className="relationship-list">
+                  {familyMembers.siblings.map((sibling) => (
+                    <div key={sibling.id} className="relationship-item">
+                      <div className="person-info">
+                        <div className="person-avatar-small">
+                          <UserCircle className="avatar-icon-small" weight="fill" />
+                        </div>
+                        <div className="person-details">
+                          <span className="person-name">{formatPersonName(sibling)}</span>
+                          <span className="person-meta">{formatPersonDetails(sibling)}</span>
+                          <span className="relationship-type">Sibling</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {familyMembers.siblings.length === 0 && (
+                    <div className="empty-state">
+                      <Users className="empty-icon" weight="regular" />
+                      <p>No siblings found</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <style jsx>{`
+          .modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            padding: 1rem !important;
+            backdrop-filter: blur(4px);
+          }
+
+          .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.2s ease-out;
+          }
+
+          @keyframes modalSlideIn {
+            from {
+              opacity: 0;
+              transform: translateY(-20px) scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 1.5rem 0 1.5rem;
+            border-bottom: 1px solid rgba(166, 94, 58, 0.1);
+            margin-bottom: 1.5rem;
+          }
+
+          .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #a65e3a;
+            margin: 0;
+          }
+
+          .close-btn {
+            background: none;
+            border: none;
+            color: #a65e3a;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .close-btn:hover {
+            background: rgba(166, 94, 58, 0.1);
+          }
+
+          .close-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+
+          .relationship-content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+          }
+
+          .person-info {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(166, 94, 58, 0.05);
+            border-radius: 8px;
+            text-align: center;
+          }
+
+          .person-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #a65e3a;
+            display: block;
+            margin-bottom: 0.5rem;
+          }
+
+          .person-details {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: #a65e3a;
+            opacity: 0.7;
+            margin: 0;
+          }
+
+          .relationship-section {
+            margin-bottom: 2rem;
+          }
+
+          .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #a65e3a;
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(166, 94, 58, 0.1);
+          }
+
+          .section-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+
+          .relationship-list {
+            margin-bottom: 1rem;
+          }
+
+          .relationship-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: rgba(166, 94, 58, 0.05);
+            border: 1px solid rgba(166, 94, 58, 0.2);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+          }
+
+          .relationship-item .person-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 0;
+            padding: 0;
+            background: none;
+            text-align: left;
+          }
+
+          .relationship-item .person-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #a65e3a;
+            margin: 0 0 0.25rem 0;
+          }
+
+          .relationship-type {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: #a65e3a;
+            opacity: 0.7;
+            margin: 0;
+          }
+
+          .remove-btn {
+            background: none;
+            border: none;
+            color: #a65e3a;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .remove-btn:hover {
+            background: rgba(166, 94, 58, 0.1);
+          }
+
+          .remove-icon {
+            width: 1rem;
+            height: 1rem;
+          }
+
+          .add-relationship {
+            margin-top: 1rem;
+          }
+
+          .person-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(166, 94, 58, 0.2);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: #a65e3a;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+          }
+
+          .person-select:focus {
+            outline: none;
+            border-color: #a65e3a;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(166, 94, 58, 0.1);
+          }
+
+          .no-relationships {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: #a65e3a;
+            opacity: 0.7;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            margin: 0;
+          }
+
+          .error-message {
+            background: rgba(241, 179, 162, 0.1);
+            border: 1px solid #f1b3a2;
+            color: #a65e3a;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+          }
+
+          .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            text-align: center;
+          }
+
+          .loading-spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(166, 94, 58, 0.2);
+            border-top: 3px solid #a65e3a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+          }
+
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+
+          .loading-container p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: #a65e3a;
+            margin: 0;
+          }
+
+          /* Mobile Responsive */
+          @media (max-width: 768px) {
+            .modal-content {
+              margin: 1rem;
+              max-height: calc(100vh - 2rem);
+            }
+
+            .modal-header {
+              padding: 1rem 1rem 0 1rem;
+              margin-bottom: 1rem;
+            }
+
+            .relationship-content {
+              padding: 0 1rem 1rem 1rem;
+            }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+
+  console.log('RelationshipManager rendering:', { isClient, person: person.firstName });
+  return isClient ? createPortal(modalContent, document.body) : null;
+}
