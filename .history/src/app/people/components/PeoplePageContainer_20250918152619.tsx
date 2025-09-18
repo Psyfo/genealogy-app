@@ -79,12 +79,12 @@ export default function PeoplePageContainer() {
   const handleUpdatePerson = async (personData: Person | Omit<Person, 'id'>) => {
     const person = personData as Person; // Safe cast since we only use this for updates
     try {
-      const response = await fetch(`/api/people/${person.id}`, {
+      const response = await fetch(`/api/people/${personData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(person),
+        body: JSON.stringify(personData),
       });
 
       const result = await response.json();
@@ -124,11 +124,11 @@ export default function PeoplePageContainer() {
 
   // Filter people based on search term
   const filteredPeople = people.filter(person =>
-    person.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    person.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="bg-gradient-to-br from-dairy-cream to-pigeon-post ml-0 lg:ml-[280px] p-4 lg:p-8 min-h-screen">
+    <div className="ml-0 lg:ml-[280px] p-4 lg:p-8 min-h-screen bg-gradient-to-br from-dairy-cream to-pigeon-post">
       <PeoplePageHeader onAddPerson={() => setShowForm(true)} />
       
       <SearchBar 
