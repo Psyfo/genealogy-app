@@ -1,15 +1,15 @@
-"use client";
-import DeleteConfirmation from "@/components/DeleteConfirmation";
-import EmptyState from "./EmptyState";
-import ErrorMessage from "./ErrorMessage";
-import LoadingState from "./LoadingState";
-import PeopleGrid from "./PeopleGrid";
-import PeoplePageHeader from "./PeoplePageHeader";
-import PersonForm from "@/components/PersonForm";
-import RelationshipManager from "@/components/RelationshipManager";
-import SearchBar from "./SearchBar";
-import { useEffect, useState } from "react";
-import { Person } from "@/types/person";
+'use client';
+import DeleteConfirmation from '@/components/DeleteConfirmation';
+import EmptyState from './EmptyState';
+import ErrorMessage from './ErrorMessage';
+import LoadingState from './LoadingState';
+import PeopleGrid from './PeopleGrid';
+import PeoplePageHeader from './PeoplePageHeader';
+import PersonForm from '@/components/PersonForm';
+import RelationshipManager from '@/components/RelationshipManager';
+import SearchBar from './SearchBar';
+import { useEffect, useState } from 'react';
+import { Person } from '@/types/person';
 
 // Modal Components
 
@@ -22,7 +22,9 @@ export default function PeoplePageContainer() {
   const [showForm, setShowForm] = useState(false);
   const [editingPerson, setEditingPerson] = useState<Person | null>(null);
   const [deletePerson, setDeletePerson] = useState<Person | null>(null);
-  const [relationshipPerson, setRelationshipPerson] = useState<Person | null>(null);
+  const [relationshipPerson, setRelationshipPerson] = useState<Person | null>(
+    null
+  );
   const [searchTerm, setSearchTerm] = useState('');
 
   // Fetch people from API
@@ -31,11 +33,13 @@ export default function PeoplePageContainer() {
       setLoading(true);
       const response = await fetch('/api/people');
       const result = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(result.details || result.error || 'Failed to fetch people');
+        throw new Error(
+          result.details || result.error || 'Failed to fetch people'
+        );
       }
-      
+
       setPeople(result);
       setError(null);
     } catch (err) {
@@ -64,7 +68,9 @@ export default function PeoplePageContainer() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.details || result.error || 'Failed to add person');
+        throw new Error(
+          result.details || result.error || 'Failed to add person'
+        );
       }
 
       await fetchPeople(); // Refresh the list
@@ -76,7 +82,9 @@ export default function PeoplePageContainer() {
   };
 
   // Handle updating a person
-  const handleUpdatePerson = async (personData: Person | Omit<Person, 'id'>) => {
+  const handleUpdatePerson = async (
+    personData: Person | Omit<Person, 'id'>
+  ) => {
     const person = personData as Person; // Safe cast since we only use this for updates
     try {
       const response = await fetch(`/api/people/${person.id}`, {
@@ -90,7 +98,9 @@ export default function PeoplePageContainer() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.details || result.error || 'Failed to update person');
+        throw new Error(
+          result.details || result.error || 'Failed to update person'
+        );
       }
 
       await fetchPeople(); // Refresh the list
@@ -111,7 +121,9 @@ export default function PeoplePageContainer() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.details || result.error || 'Failed to delete person');
+        throw new Error(
+          result.details || result.error || 'Failed to delete person'
+        );
       }
 
       await fetchPeople(); // Refresh the list
@@ -123,34 +135,26 @@ export default function PeoplePageContainer() {
   };
 
   // Filter people based on search term
-  const filteredPeople = people.filter(person =>
+  const filteredPeople = people.filter((person) =>
     person.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="bg-gradient-to-br from-dairy-cream to-pigeon-post ml-0 lg:ml-[280px] p-4 lg:p-8 min-h-screen">
+    <div className='bg-gradient-to-br from-dairy-cream to-pigeon-post ml-0 lg:ml-[280px] p-4 lg:p-8 min-h-screen'>
       <PeoplePageHeader onAddPerson={() => setShowForm(true)} />
-      
-      <SearchBar 
-        searchTerm={searchTerm} 
-        onSearchChange={setSearchTerm} 
-      />
 
-      {error && (
-        <ErrorMessage 
-          error={error} 
-          onDismiss={() => setError(null)} 
-        />
-      )}
+      <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+      {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {loading && <LoadingState />}
 
       {!loading && (
         <>
           {filteredPeople.length === 0 ? (
-            <EmptyState 
-              searchTerm={searchTerm} 
-              onAddPerson={() => setShowForm(true)} 
+            <EmptyState
+              searchTerm={searchTerm}
+              onAddPerson={() => setShowForm(true)}
             />
           ) : (
             <PeopleGrid
@@ -166,19 +170,21 @@ export default function PeoplePageContainer() {
       {/* Modal Components */}
       {showForm && (
         <PersonForm
+          key='new-person'
           person={null}
           onSave={handleAddPerson}
           onCancel={() => setShowForm(false)}
-          title="Add New Person"
+          title='Add New Person'
         />
       )}
 
       {editingPerson && (
         <PersonForm
+          key={editingPerson.id}
           person={editingPerson}
           onSave={handleUpdatePerson}
           onCancel={() => setEditingPerson(null)}
-          title="Edit Person"
+          title='Edit Person'
         />
       )}
 

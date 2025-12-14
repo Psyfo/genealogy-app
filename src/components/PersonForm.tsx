@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useState } from "react";
-import { LifeEvent, Person } from "@/types/person";
+'use client';
+import { useState } from 'react';
+import { LifeEvent, Person } from '@/types/person';
 
 import {
   Briefcase,
@@ -28,112 +28,56 @@ interface PersonFormProps {
   title: string;
 }
 
-export default function PersonForm({ person, onSave, onCancel, title }: PersonFormProps) {
-  const [formData, setFormData] = useState({
-    // Basic Information
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    maidenName: '',
-    suffix: '',
-    gender: '',
-    
-    // Personal Details
-    birthDate: '',
-    birthPlace: '',
-    deathDate: '',
-    deathPlace: '',
-    causeOfDeath: '',
-    
-    // Physical Description
-    height: '',
-    weight: '',
-    eyeColor: '',
-    hairColor: '',
-    distinguishingMarks: '',
-    
-    // Professional & Education
-    occupation: '',
-    employer: '',
-    education: '',
-    militaryService: '',
-    
-    // Contact & Location
-    currentAddress: '',
-    phoneNumber: '',
-    email: '',
-    
-    // Additional Details
-    nationality: '',
-    ethnicity: '',
-    religion: '',
-    politicalAffiliation: '',
-    
-    // Life Events
-    lifeEvents: [],
-    
-    // Medical Information
-    bloodType: '',
-    medicalConditions: '',
-    allergies: '',
-    
-    // Notes & Research
-    notes: '',
-    researchNotes: '',
-    sources: '',
-    
-    // Legacy fields for backward compatibility
-    name: '',
-    birthYear: '',
-    deathYear: '',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [activeTab, setActiveTab] = useState('basic');
+type FormData = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  maidenName: string;
+  suffix: string;
+  gender: string;
+  birthDate: string;
+  birthPlace: string;
+  deathDate: string;
+  deathPlace: string;
+  causeOfDeath: string;
+  height: string;
+  weight: string;
+  eyeColor: string;
+  hairColor: string;
+  distinguishingMarks: string;
+  occupation: string;
+  employer: string;
+  education: string;
+  militaryService: string;
+  currentAddress: string;
+  phoneNumber: string;
+  email: string;
+  nationality: string;
+  ethnicity: string;
+  religion: string;
+  politicalAffiliation: string;
+  lifeEvents: LifeEvent[];
+  bloodType: string;
+  medicalConditions: string;
+  allergies: string;
+  notes: string;
+  researchNotes: string;
+  sources: string;
+  name: string;
+  birthYear: string;
+  deathYear: string;
+};
 
-  // Initialize form data when person prop changes
-  useEffect(() => {
-    if (person) {
-      setFormData({
-        firstName: person.firstName || '',
-        middleName: person.middleName || '',
-        lastName: person.lastName || '',
-        maidenName: person.maidenName || '',
-        suffix: person.suffix || '',
-        gender: person.gender || '',
-        birthDate: person.birthDate || '',
-        birthPlace: person.birthPlace || '',
-        deathDate: person.deathDate || '',
-        deathPlace: person.deathPlace || '',
-        causeOfDeath: person.causeOfDeath || '',
-        height: person.height || '',
-        weight: person.weight || '',
-        eyeColor: person.eyeColor || '',
-        hairColor: person.hairColor || '',
-        distinguishingMarks: person.distinguishingMarks || '',
-        occupation: person.occupation || '',
-        employer: person.employer || '',
-        education: person.education || '',
-        militaryService: person.militaryService || '',
-        currentAddress: person.currentAddress || '',
-        phoneNumber: person.phoneNumber || '',
-        email: person.email || '',
-        nationality: person.nationality || '',
-        ethnicity: person.ethnicity || '',
-        religion: person.religion || '',
-        politicalAffiliation: person.politicalAffiliation || '',
-        lifeEvents: person.lifeEvents || [],
-        bloodType: person.bloodType || '',
-        medicalConditions: person.medicalConditions?.join(', ') || '',
-        allergies: person.allergies?.join(', ') || '',
-        notes: person.notes || '',
-        researchNotes: person.researchNotes || '',
-        sources: person.sources?.join(', ') || '',
-        name: person.name || '',
-        birthYear: person.birthYear?.toString() || '',
-        deathYear: person.deathYear?.toString() || '',
-      });
-    } else {
-      setFormData({
+export default function PersonForm({
+  person,
+  onSave,
+  onCancel,
+  title,
+}: PersonFormProps) {
+  // Helper function to create form data from person
+  const createFormDataFromPerson = (personData: Person | null): FormData => {
+    if (!personData) {
+      return {
         firstName: '',
         middleName: '',
         lastName: '',
@@ -171,10 +115,55 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
         name: '',
         birthYear: '',
         deathYear: '',
-      });
+      };
     }
-    setErrors({});
-  }, [person]);
+    return {
+      firstName: personData.firstName || '',
+      middleName: personData.middleName || '',
+      lastName: personData.lastName || '',
+      maidenName: personData.maidenName || '',
+      suffix: personData.suffix || '',
+      gender: personData.gender || '',
+      birthDate: personData.birthDate || '',
+      birthPlace: personData.birthPlace || '',
+      deathDate: personData.deathDate || '',
+      deathPlace: personData.deathPlace || '',
+      causeOfDeath: personData.causeOfDeath || '',
+      height: personData.height || '',
+      weight: personData.weight || '',
+      eyeColor: personData.eyeColor || '',
+      hairColor: personData.hairColor || '',
+      distinguishingMarks: personData.distinguishingMarks || '',
+      occupation: personData.occupation || '',
+      employer: personData.employer || '',
+      education: personData.education || '',
+      militaryService: personData.militaryService || '',
+      currentAddress: personData.currentAddress || '',
+      phoneNumber: personData.phoneNumber || '',
+      email: personData.email || '',
+      nationality: personData.nationality || '',
+      ethnicity: personData.ethnicity || '',
+      religion: personData.religion || '',
+      politicalAffiliation: personData.politicalAffiliation || '',
+      lifeEvents: personData.lifeEvents || [],
+      bloodType: personData.bloodType || '',
+      medicalConditions: personData.medicalConditions?.join(', ') || '',
+      allergies: personData.allergies?.join(', ') || '',
+      notes: personData.notes || '',
+      researchNotes: personData.researchNotes || '',
+      sources: personData.sources?.join(', ') || '',
+      name: personData.name || '',
+      birthYear: personData.birthYear?.toString() || '',
+      deathYear: personData.deathYear?.toString() || '',
+    };
+  };
+
+  // Initialize form data from person prop - parent component uses key prop to reset
+  const [formData, setFormData] = useState<FormData>(() =>
+    createFormDataFromPerson(person)
+  );
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [activeTab, setActiveTab] = useState('basic');
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -238,7 +227,12 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
     }
 
     // Blood type validation
-    if (formData.bloodType && !['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].includes(formData.bloodType)) {
+    if (
+      formData.bloodType &&
+      !['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].includes(
+        formData.bloodType
+      )
+    ) {
       newErrors.bloodType = 'Please select a valid blood type';
     }
 
@@ -246,15 +240,14 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
-    const personData = {
-      ...(person && { id: person.id }),
+    const baseData = {
       firstName: formData.firstName.trim(),
       middleName: formData.middleName.trim() || undefined,
       lastName: formData.lastName.trim(),
@@ -282,29 +275,59 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
       ethnicity: formData.ethnicity.trim() || undefined,
       religion: formData.religion.trim() || undefined,
       politicalAffiliation: formData.politicalAffiliation.trim() || undefined,
-      lifeEvents: formData.lifeEvents.length > 0 ? formData.lifeEvents : undefined,
+      lifeEvents:
+        formData.lifeEvents.length > 0 ? formData.lifeEvents : undefined,
       bloodType: formData.bloodType || undefined,
-      medicalConditions: formData.medicalConditions.trim() ? formData.medicalConditions.split(',').map(c => c.trim()).filter(c => c) : undefined,
-      allergies: formData.allergies.trim() ? formData.allergies.split(',').map(a => a.trim()).filter(a => a) : undefined,
+      medicalConditions: formData.medicalConditions.trim()
+        ? formData.medicalConditions
+            .split(',')
+            .map((c) => c.trim())
+            .filter((c) => c)
+        : undefined,
+      allergies: formData.allergies.trim()
+        ? formData.allergies
+            .split(',')
+            .map((a) => a.trim())
+            .filter((a) => a)
+        : undefined,
       notes: formData.notes.trim() || undefined,
       researchNotes: formData.researchNotes.trim() || undefined,
-      sources: formData.sources.trim() ? formData.sources.split(',').map(s => s.trim()).filter(s => s) : undefined,
-      
+      sources: formData.sources.trim()
+        ? formData.sources
+            .split(',')
+            .map((s) => s.trim())
+            .filter((s) => s)
+        : undefined,
+
       // Legacy fields for backward compatibility
       name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
-      birthYear: formData.birthDate ? new Date(formData.birthDate).getFullYear() : (formData.birthYear ? parseInt(formData.birthYear) : undefined),
-      deathYear: formData.deathDate ? new Date(formData.deathDate).getFullYear() : (formData.deathYear ? parseInt(formData.deathYear) : undefined),
+      birthYear: formData.birthDate
+        ? new Date(formData.birthDate).getFullYear()
+        : formData.birthYear
+        ? parseInt(formData.birthYear)
+        : undefined,
+      deathYear: formData.deathDate
+        ? new Date(formData.deathDate).getFullYear()
+        : formData.deathYear
+        ? parseInt(formData.deathYear)
+        : undefined,
     };
 
-    onSave(personData);
+    if (person) {
+      // Editing existing person - include id
+      onSave({ ...baseData, id: person.id } as Person);
+    } else {
+      // Creating new person - omit id
+      onSave(baseData as Omit<Person, 'id'>);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
@@ -314,27 +337,31 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
       event: '',
       date: '',
       place: '',
-      notes: ''
+      notes: '',
     };
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      lifeEvents: [...prev.lifeEvents, newEvent]
+      lifeEvents: [...prev.lifeEvents, newEvent],
     }));
   };
 
-  const updateLifeEvent = (index: number, field: keyof LifeEvent, value: string) => {
-    setFormData(prev => ({
+  const updateLifeEvent = (
+    index: number,
+    field: keyof LifeEvent,
+    value: string
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      lifeEvents: prev.lifeEvents.map((event, i) => 
+      lifeEvents: prev.lifeEvents.map((event, i) =>
         i === index ? { ...event, [field]: value } : event
-      )
+      ),
     }));
   };
 
   const removeLifeEvent = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      lifeEvents: prev.lifeEvents.filter((_, i) => i !== index)
+      lifeEvents: prev.lifeEvents.filter((_, i) => i !== index),
     }));
   };
 
@@ -350,33 +377,35 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
   ];
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">{title}</h2>
+    <div className='modal-overlay'>
+      <div className='modal-content'>
+        <div className='modal-header'>
+          <h2 className='modal-title'>{title}</h2>
           <button
-            className="close-btn"
+            className='close-btn'
             onClick={onCancel}
-            aria-label="Close form"
+            aria-label='Close form'
           >
-            <X className="close-icon" weight="bold" />
+            <X className='close-icon' weight='bold' />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="person-form">
+        <form onSubmit={handleSubmit} className='person-form'>
           {/* Tab Navigation */}
-          <div className="tab-navigation">
+          <div className='tab-navigation'>
             {tabs.map((tab) => {
               const IconComponent = tab.icon;
               return (
                 <button
                   key={tab.id}
-                  type="button"
-                  className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                  type='button'
+                  className={`tab-button ${
+                    activeTab === tab.id ? 'active' : ''
+                  }`}
                   onClick={() => setActiveTab(tab.id)}
                 >
-                  <IconComponent className="tab-icon" weight="regular" />
-                  <span className="tab-label">{tab.label}</span>
+                  <IconComponent className='tab-icon' weight='regular' />
+                  <span className='tab-label'>{tab.label}</span>
                 </button>
               );
             })}
@@ -384,107 +413,123 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Basic Info */}
           {activeTab === 'basic' && (
-            <div className="form-section">
-              <h3 className="section-title">Basic Information</h3>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="firstName" className="form-label">
-                    <User className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Basic Information</h3>
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='firstName' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     First Name *
                   </label>
                   <input
-                    type="text"
-                    id="firstName"
+                    type='text'
+                    id='firstName'
                     value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange('firstName', e.target.value)
+                    }
                     className={`form-input ${errors.firstName ? 'error' : ''}`}
-                    placeholder="Enter first name"
+                    placeholder='Enter first name'
                     autoFocus
                   />
-                  {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+                  {errors.firstName && (
+                    <span className='error-message'>{errors.firstName}</span>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="middleName" className="form-label">
-                    <User className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='middleName' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     Middle Name
                   </label>
                   <input
-                    type="text"
-                    id="middleName"
+                    type='text'
+                    id='middleName'
                     value={formData.middleName}
-                    onChange={(e) => handleInputChange('middleName', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter middle name"
+                    onChange={(e) =>
+                      handleInputChange('middleName', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter middle name'
                   />
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="lastName" className="form-label">
-                    <User className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='lastName' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     Last Name *
                   </label>
                   <input
-                    type="text"
-                    id="lastName"
+                    type='text'
+                    id='lastName'
                     value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange('lastName', e.target.value)
+                    }
                     className={`form-input ${errors.lastName ? 'error' : ''}`}
-                    placeholder="Enter last name"
+                    placeholder='Enter last name'
                   />
-                  {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+                  {errors.lastName && (
+                    <span className='error-message'>{errors.lastName}</span>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="maidenName" className="form-label">
-                    <User className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='maidenName' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     Maiden Name
                   </label>
                   <input
-                    type="text"
-                    id="maidenName"
+                    type='text'
+                    id='maidenName'
                     value={formData.maidenName}
-                    onChange={(e) => handleInputChange('maidenName', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter maiden name"
+                    onChange={(e) =>
+                      handleInputChange('maidenName', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter maiden name'
                   />
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="suffix" className="form-label">
-                    <User className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='suffix' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     Suffix
                   </label>
                   <input
-                    type="text"
-                    id="suffix"
+                    type='text'
+                    id='suffix'
                     value={formData.suffix}
-                    onChange={(e) => handleInputChange('suffix', e.target.value)}
-                    className="form-input"
-                    placeholder="Jr., Sr., III, etc."
+                    onChange={(e) =>
+                      handleInputChange('suffix', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Jr., Sr., III, etc.'
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="gender" className="form-label">
-                    <User className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='gender' className='form-label'>
+                    <User className='label-icon' weight='regular' />
                     Gender
                   </label>
                   <select
-                    id="gender"
+                    id='gender'
                     value={formData.gender}
-                    onChange={(e) => handleInputChange('gender', e.target.value)}
-                    className="form-input"
+                    onChange={(e) =>
+                      handleInputChange('gender', e.target.value)
+                    }
+                    className='form-input'
                   >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="unknown">Unknown</option>
+                    <option value=''>Select gender</option>
+                    <option value='male'>Male</option>
+                    <option value='female'>Female</option>
+                    <option value='other'>Other</option>
+                    <option value='unknown'>Unknown</option>
                   </select>
                 </div>
               </div>
@@ -493,91 +538,109 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Personal Details */}
           {activeTab === 'personal' && (
-            <div className="form-section">
-              <h3 className="section-title">Personal Details</h3>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="birthDate" className="form-label">
-                    <Calendar className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Personal Details</h3>
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='birthDate' className='form-label'>
+                    <Calendar className='label-icon' weight='regular' />
                     Birth Date
                   </label>
                   <input
-                    type="date"
-                    id="birthDate"
+                    type='date'
+                    id='birthDate'
                     value={formData.birthDate}
-                    onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange('birthDate', e.target.value)
+                    }
                     className={`form-input ${errors.birthDate ? 'error' : ''}`}
                   />
-                  {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
+                  {errors.birthDate && (
+                    <span className='error-message'>{errors.birthDate}</span>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="birthPlace" className="form-label">
-                    <MapPin className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='birthPlace' className='form-label'>
+                    <MapPin className='label-icon' weight='regular' />
                     Birth Place
                   </label>
                   <input
-                    type="text"
-                    id="birthPlace"
+                    type='text'
+                    id='birthPlace'
                     value={formData.birthPlace}
-                    onChange={(e) => handleInputChange('birthPlace', e.target.value)}
-                    className="form-input"
-                    placeholder="City, State, Country"
+                    onChange={(e) =>
+                      handleInputChange('birthPlace', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='City, State, Country'
                   />
                 </div>
               </div>
 
               {/* Death Details - Optional Section */}
-              <div className="optional-section">
-                <div className="optional-header">
-                  <h4 className="optional-title">Death Details (Optional)</h4>
-                  <p className="optional-description">Add death information if known</p>
+              <div className='optional-section'>
+                <div className='optional-header'>
+                  <h4 className='optional-title'>Death Details (Optional)</h4>
+                  <p className='optional-description'>
+                    Add death information if known
+                  </p>
                 </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="deathDate" className="form-label">
-                      <Calendar className="label-icon" weight="regular" />
+
+                <div className='form-row'>
+                  <div className='form-group'>
+                    <label htmlFor='deathDate' className='form-label'>
+                      <Calendar className='label-icon' weight='regular' />
                       Death Date
                     </label>
                     <input
-                      type="date"
-                      id="deathDate"
+                      type='date'
+                      id='deathDate'
                       value={formData.deathDate}
-                      onChange={(e) => handleInputChange('deathDate', e.target.value)}
-                      className={`form-input ${errors.deathDate ? 'error' : ''}`}
+                      onChange={(e) =>
+                        handleInputChange('deathDate', e.target.value)
+                      }
+                      className={`form-input ${
+                        errors.deathDate ? 'error' : ''
+                      }`}
                     />
-                    {errors.deathDate && <span className="error-message">{errors.deathDate}</span>}
+                    {errors.deathDate && (
+                      <span className='error-message'>{errors.deathDate}</span>
+                    )}
                   </div>
 
-                  <div className="form-group">
-                    <label htmlFor="deathPlace" className="form-label">
-                      <MapPin className="label-icon" weight="regular" />
+                  <div className='form-group'>
+                    <label htmlFor='deathPlace' className='form-label'>
+                      <MapPin className='label-icon' weight='regular' />
                       Death Place
                     </label>
                     <input
-                      type="text"
-                      id="deathPlace"
+                      type='text'
+                      id='deathPlace'
                       value={formData.deathPlace}
-                      onChange={(e) => handleInputChange('deathPlace', e.target.value)}
-                      className="form-input"
-                      placeholder="City, State, Country"
+                      onChange={(e) =>
+                        handleInputChange('deathPlace', e.target.value)
+                      }
+                      className='form-input'
+                      placeholder='City, State, Country'
                     />
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="causeOfDeath" className="form-label">
-                    <Stethoscope className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='causeOfDeath' className='form-label'>
+                    <Stethoscope className='label-icon' weight='regular' />
                     Cause of Death
                   </label>
                   <input
-                    type="text"
-                    id="causeOfDeath"
+                    type='text'
+                    id='causeOfDeath'
                     value={formData.causeOfDeath}
-                    onChange={(e) => handleInputChange('causeOfDeath', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter cause of death"
+                    onChange={(e) =>
+                      handleInputChange('causeOfDeath', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter cause of death'
                   />
                 </div>
               </div>
@@ -586,83 +649,93 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Physical Details */}
           {activeTab === 'physical' && (
-            <div className="form-section">
-              <h3 className="section-title">Physical Description</h3>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="height" className="form-label">
-                    <UserCircle className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Physical Description</h3>
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='height' className='form-label'>
+                    <UserCircle className='label-icon' weight='regular' />
                     Height
                   </label>
                   <input
-                    type="text"
-                    id="height"
+                    type='text'
+                    id='height'
                     value={formData.height}
-                    onChange={(e) => handleInputChange('height', e.target.value)}
-                    className="form-input"
-                     placeholder="e.g., 5'10&quot; or 178 cm"
+                    onChange={(e) =>
+                      handleInputChange('height', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='e.g., 5&apos;10" or 178 cm'
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="weight" className="form-label">
-                    <UserCircle className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='weight' className='form-label'>
+                    <UserCircle className='label-icon' weight='regular' />
                     Weight
                   </label>
                   <input
-                    type="text"
-                    id="weight"
+                    type='text'
+                    id='weight'
                     value={formData.weight}
-                    onChange={(e) => handleInputChange('weight', e.target.value)}
-                    className="form-input"
-                    placeholder="e.g., 150 lbs or 68 kg"
+                    onChange={(e) =>
+                      handleInputChange('weight', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='e.g., 150 lbs or 68 kg'
                   />
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="eyeColor" className="form-label">
-                    <UserCircle className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='eyeColor' className='form-label'>
+                    <UserCircle className='label-icon' weight='regular' />
                     Eye Color
                   </label>
                   <input
-                    type="text"
-                    id="eyeColor"
+                    type='text'
+                    id='eyeColor'
                     value={formData.eyeColor}
-                    onChange={(e) => handleInputChange('eyeColor', e.target.value)}
-                    className="form-input"
-                    placeholder="e.g., Brown, Blue, Green"
+                    onChange={(e) =>
+                      handleInputChange('eyeColor', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='e.g., Brown, Blue, Green'
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="hairColor" className="form-label">
-                    <UserCircle className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='hairColor' className='form-label'>
+                    <UserCircle className='label-icon' weight='regular' />
                     Hair Color
                   </label>
                   <input
-                    type="text"
-                    id="hairColor"
+                    type='text'
+                    id='hairColor'
                     value={formData.hairColor}
-                    onChange={(e) => handleInputChange('hairColor', e.target.value)}
-                    className="form-input"
-                    placeholder="e.g., Brown, Blonde, Black"
+                    onChange={(e) =>
+                      handleInputChange('hairColor', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='e.g., Brown, Blonde, Black'
                   />
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="distinguishingMarks" className="form-label">
-                  <UserCircle className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='distinguishingMarks' className='form-label'>
+                  <UserCircle className='label-icon' weight='regular' />
                   Distinguishing Marks
                 </label>
                 <textarea
-                  id="distinguishingMarks"
+                  id='distinguishingMarks'
                   value={formData.distinguishingMarks}
-                  onChange={(e) => handleInputChange('distinguishingMarks', e.target.value)}
-                  className="form-input"
-                  placeholder="Scars, tattoos, birthmarks, etc."
+                  onChange={(e) =>
+                    handleInputChange('distinguishingMarks', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Scars, tattoos, birthmarks, etc.'
                   rows={3}
                 />
               </div>
@@ -671,65 +744,73 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Professional Details */}
           {activeTab === 'professional' && (
-            <div className="form-section">
-              <h3 className="section-title">Professional & Education</h3>
-              <div className="form-group">
-                <label htmlFor="occupation" className="form-label">
-                  <Briefcase className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Professional & Education</h3>
+              <div className='form-group'>
+                <label htmlFor='occupation' className='form-label'>
+                  <Briefcase className='label-icon' weight='regular' />
                   Occupation
                 </label>
                 <input
-                  type="text"
-                  id="occupation"
+                  type='text'
+                  id='occupation'
                   value={formData.occupation}
-                  onChange={(e) => handleInputChange('occupation', e.target.value)}
-                  className="form-input"
-                  placeholder="Enter occupation"
+                  onChange={(e) =>
+                    handleInputChange('occupation', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Enter occupation'
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="employer" className="form-label">
-                  <Briefcase className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='employer' className='form-label'>
+                  <Briefcase className='label-icon' weight='regular' />
                   Employer
                 </label>
                 <input
-                  type="text"
-                  id="employer"
+                  type='text'
+                  id='employer'
                   value={formData.employer}
-                  onChange={(e) => handleInputChange('employer', e.target.value)}
-                  className="form-input"
-                  placeholder="Enter employer"
+                  onChange={(e) =>
+                    handleInputChange('employer', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Enter employer'
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="education" className="form-label">
-                  <GraduationCap className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='education' className='form-label'>
+                  <GraduationCap className='label-icon' weight='regular' />
                   Education
                 </label>
                 <input
-                  type="text"
-                  id="education"
+                  type='text'
+                  id='education'
                   value={formData.education}
-                  onChange={(e) => handleInputChange('education', e.target.value)}
-                  className="form-input"
-                  placeholder="e.g., High School, College, University"
+                  onChange={(e) =>
+                    handleInputChange('education', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='e.g., High School, College, University'
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="militaryService" className="form-label">
-                  <Shield className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='militaryService' className='form-label'>
+                  <Shield className='label-icon' weight='regular' />
                   Military Service
                 </label>
                 <input
-                  type="text"
-                  id="militaryService"
+                  type='text'
+                  id='militaryService'
                   value={formData.militaryService}
-                  onChange={(e) => handleInputChange('militaryService', e.target.value)}
-                  className="form-input"
-                  placeholder="Branch, rank, years of service"
+                  onChange={(e) =>
+                    handleInputChange('militaryService', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Branch, rank, years of service'
                 />
               </div>
             </div>
@@ -737,117 +818,135 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Contact Details */}
           {activeTab === 'contact' && (
-            <div className="form-section">
-              <h3 className="section-title">Contact & Location</h3>
-              <div className="form-group">
-                <label htmlFor="currentAddress" className="form-label">
-                  <MapPin className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Contact & Location</h3>
+              <div className='form-group'>
+                <label htmlFor='currentAddress' className='form-label'>
+                  <MapPin className='label-icon' weight='regular' />
                   Current Address
                 </label>
                 <textarea
-                  id="currentAddress"
+                  id='currentAddress'
                   value={formData.currentAddress}
-                  onChange={(e) => handleInputChange('currentAddress', e.target.value)}
-                  className="form-input"
-                  placeholder="Enter current address"
+                  onChange={(e) =>
+                    handleInputChange('currentAddress', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Enter current address'
                   rows={3}
                 />
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="phoneNumber" className="form-label">
-                    <Phone className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='phoneNumber' className='form-label'>
+                    <Phone className='label-icon' weight='regular' />
                     Phone Number
                   </label>
                   <input
-                    type="tel"
-                    id="phoneNumber"
+                    type='tel'
+                    id='phoneNumber'
                     value={formData.phoneNumber}
-                    onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                    className={`form-input ${errors.phoneNumber ? 'error' : ''}`}
-                    placeholder="Enter phone number"
+                    onChange={(e) =>
+                      handleInputChange('phoneNumber', e.target.value)
+                    }
+                    className={`form-input ${
+                      errors.phoneNumber ? 'error' : ''
+                    }`}
+                    placeholder='Enter phone number'
                   />
-                  {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
+                  {errors.phoneNumber && (
+                    <span className='error-message'>{errors.phoneNumber}</span>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">
-                    <Envelope className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='email' className='form-label'>
+                    <Envelope className='label-icon' weight='regular' />
                     Email
                   </label>
                   <input
-                    type="email"
-                    id="email"
+                    type='email'
+                    id='email'
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className={`form-input ${errors.email ? 'error' : ''}`}
-                    placeholder="Enter email address"
+                    placeholder='Enter email address'
                   />
-                  {errors.email && <span className="error-message">{errors.email}</span>}
+                  {errors.email && (
+                    <span className='error-message'>{errors.email}</span>
+                  )}
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="nationality" className="form-label">
-                    <MapPin className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='nationality' className='form-label'>
+                    <MapPin className='label-icon' weight='regular' />
                     Nationality
                   </label>
                   <input
-                    type="text"
-                    id="nationality"
+                    type='text'
+                    id='nationality'
                     value={formData.nationality}
-                    onChange={(e) => handleInputChange('nationality', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter nationality"
+                    onChange={(e) =>
+                      handleInputChange('nationality', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter nationality'
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="ethnicity" className="form-label">
-                    <Users className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='ethnicity' className='form-label'>
+                    <Users className='label-icon' weight='regular' />
                     Ethnicity
                   </label>
                   <input
-                    type="text"
-                    id="ethnicity"
+                    type='text'
+                    id='ethnicity'
                     value={formData.ethnicity}
-                    onChange={(e) => handleInputChange('ethnicity', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter ethnicity"
+                    onChange={(e) =>
+                      handleInputChange('ethnicity', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter ethnicity'
                   />
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="religion" className="form-label">
-                    <Users className="label-icon" weight="regular" />
+              <div className='form-row'>
+                <div className='form-group'>
+                  <label htmlFor='religion' className='form-label'>
+                    <Users className='label-icon' weight='regular' />
                     Religion
                   </label>
                   <input
-                    type="text"
-                    id="religion"
+                    type='text'
+                    id='religion'
                     value={formData.religion}
-                    onChange={(e) => handleInputChange('religion', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter religion"
+                    onChange={(e) =>
+                      handleInputChange('religion', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter religion'
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="politicalAffiliation" className="form-label">
-                    <Users className="label-icon" weight="regular" />
+                <div className='form-group'>
+                  <label htmlFor='politicalAffiliation' className='form-label'>
+                    <Users className='label-icon' weight='regular' />
                     Political Affiliation
                   </label>
                   <input
-                    type="text"
-                    id="politicalAffiliation"
+                    type='text'
+                    id='politicalAffiliation'
                     value={formData.politicalAffiliation}
-                    onChange={(e) => handleInputChange('politicalAffiliation', e.target.value)}
-                    className="form-input"
-                    placeholder="Enter political affiliation"
+                    onChange={(e) =>
+                      handleInputChange('politicalAffiliation', e.target.value)
+                    }
+                    className='form-input'
+                    placeholder='Enter political affiliation'
                   />
                 </div>
               </div>
@@ -856,94 +955,104 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Life Events */}
           {activeTab === 'life' && (
-            <div className="form-section">
-              <div className="section-header">
-                <h3 className="section-title">Life Events</h3>
-                <p className="section-description">Add important life events and milestones</p>
+            <div className='form-section'>
+              <div className='section-header'>
+                <h3 className='section-title'>Life Events</h3>
+                <p className='section-description'>
+                  Add important life events and milestones
+                </p>
               </div>
-              
-              <div className="life-events-container">
+
+              <div className='life-events-container'>
                 {formData.lifeEvents.map((event, index) => (
-                  <div key={event.id} className="life-event-card">
-                    <div className="life-event-header">
-                      <h4 className="life-event-title">Event {index + 1}</h4>
+                  <div key={event.id} className='life-event-card'>
+                    <div className='life-event-header'>
+                      <h4 className='life-event-title'>Event {index + 1}</h4>
                       <button
-                        type="button"
-                        className="remove-event-btn"
+                        type='button'
+                        className='remove-event-btn'
                         onClick={() => removeLifeEvent(index)}
-                        aria-label="Remove event"
+                        aria-label='Remove event'
                       >
-                        <Trash className="remove-icon" weight="regular" />
+                        <Trash className='remove-icon' weight='regular' />
                       </button>
                     </div>
-                    
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">
-                          <Calendar className="label-icon" weight="regular" />
+
+                    <div className='form-row'>
+                      <div className='form-group'>
+                        <label className='form-label'>
+                          <Calendar className='label-icon' weight='regular' />
                           Event Description *
                         </label>
                         <input
-                          type="text"
+                          type='text'
                           value={event.event}
-                          onChange={(e) => updateLifeEvent(index, 'event', e.target.value)}
-                          className="form-input"
-                          placeholder="e.g., Graduation, Marriage, Baptism"
+                          onChange={(e) =>
+                            updateLifeEvent(index, 'event', e.target.value)
+                          }
+                          className='form-input'
+                          placeholder='e.g., Graduation, Marriage, Baptism'
                         />
                       </div>
-                      
-                      <div className="form-group">
-                        <label className="form-label">
-                          <Calendar className="label-icon" weight="regular" />
+
+                      <div className='form-group'>
+                        <label className='form-label'>
+                          <Calendar className='label-icon' weight='regular' />
                           Date *
                         </label>
                         <input
-                          type="date"
+                          type='date'
                           value={event.date}
-                          onChange={(e) => updateLifeEvent(index, 'date', e.target.value)}
-                          className="form-input"
+                          onChange={(e) =>
+                            updateLifeEvent(index, 'date', e.target.value)
+                          }
+                          className='form-input'
                         />
                       </div>
                     </div>
-                    
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">
-                          <MapPin className="label-icon" weight="regular" />
+
+                    <div className='form-row'>
+                      <div className='form-group'>
+                        <label className='form-label'>
+                          <MapPin className='label-icon' weight='regular' />
                           Place
                         </label>
                         <input
-                          type="text"
+                          type='text'
                           value={event.place || ''}
-                          onChange={(e) => updateLifeEvent(index, 'place', e.target.value)}
-                          className="form-input"
-                          placeholder="City, State, Country"
+                          onChange={(e) =>
+                            updateLifeEvent(index, 'place', e.target.value)
+                          }
+                          className='form-input'
+                          placeholder='City, State, Country'
                         />
                       </div>
-                      
-                      <div className="form-group">
-                        <label className="form-label">
-                          <FileText className="label-icon" weight="regular" />
+
+                      <div className='form-group'>
+                        <label className='form-label'>
+                          <FileText className='label-icon' weight='regular' />
                           Notes
                         </label>
                         <input
-                          type="text"
+                          type='text'
                           value={event.notes || ''}
-                          onChange={(e) => updateLifeEvent(index, 'notes', e.target.value)}
-                          className="form-input"
-                          placeholder="Additional details"
+                          onChange={(e) =>
+                            updateLifeEvent(index, 'notes', e.target.value)
+                          }
+                          className='form-input'
+                          placeholder='Additional details'
                         />
                       </div>
                     </div>
                   </div>
                 ))}
-                
+
                 <button
-                  type="button"
-                  className="add-event-btn"
+                  type='button'
+                  className='add-event-btn'
                   onClick={addLifeEvent}
                 >
-                  <Plus className="add-icon" weight="regular" />
+                  <Plus className='add-icon' weight='regular' />
                   Add Life Event
                 </button>
               </div>
@@ -952,59 +1061,67 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Medical Details */}
           {activeTab === 'medical' && (
-            <div className="form-section">
-              <h3 className="section-title">Medical Information</h3>
-              <div className="form-group">
-                <label htmlFor="bloodType" className="form-label">
-                  <Stethoscope className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Medical Information</h3>
+              <div className='form-group'>
+                <label htmlFor='bloodType' className='form-label'>
+                  <Stethoscope className='label-icon' weight='regular' />
                   Blood Type
                 </label>
                 <select
-                  id="bloodType"
+                  id='bloodType'
                   value={formData.bloodType}
-                  onChange={(e) => handleInputChange('bloodType', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('bloodType', e.target.value)
+                  }
                   className={`form-input ${errors.bloodType ? 'error' : ''}`}
                 >
-                  <option value="">Select blood type</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+                  <option value=''>Select blood type</option>
+                  <option value='A+'>A+</option>
+                  <option value='A-'>A-</option>
+                  <option value='B+'>B+</option>
+                  <option value='B-'>B-</option>
+                  <option value='AB+'>AB+</option>
+                  <option value='AB-'>AB-</option>
+                  <option value='O+'>O+</option>
+                  <option value='O-'>O-</option>
                 </select>
-                {errors.bloodType && <span className="error-message">{errors.bloodType}</span>}
+                {errors.bloodType && (
+                  <span className='error-message'>{errors.bloodType}</span>
+                )}
               </div>
 
-              <div className="form-group">
-                <label htmlFor="medicalConditions" className="form-label">
-                  <Stethoscope className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='medicalConditions' className='form-label'>
+                  <Stethoscope className='label-icon' weight='regular' />
                   Medical Conditions
                 </label>
                 <input
-                  type="text"
-                  id="medicalConditions"
+                  type='text'
+                  id='medicalConditions'
                   value={formData.medicalConditions}
-                  onChange={(e) => handleInputChange('medicalConditions', e.target.value)}
-                  className="form-input"
-                  placeholder="Separate multiple conditions with commas"
+                  onChange={(e) =>
+                    handleInputChange('medicalConditions', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Separate multiple conditions with commas'
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="allergies" className="form-label">
-                  <Stethoscope className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='allergies' className='form-label'>
+                  <Stethoscope className='label-icon' weight='regular' />
                   Allergies
                 </label>
                 <input
-                  type="text"
-                  id="allergies"
+                  type='text'
+                  id='allergies'
                   value={formData.allergies}
-                  onChange={(e) => handleInputChange('allergies', e.target.value)}
-                  className="form-input"
-                  placeholder="Separate multiple allergies with commas"
+                  onChange={(e) =>
+                    handleInputChange('allergies', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Separate multiple allergies with commas'
                 />
               </div>
             </div>
@@ -1012,67 +1129,62 @@ export default function PersonForm({ person, onSave, onCancel, title }: PersonFo
 
           {/* Tab Content - Notes */}
           {activeTab === 'notes' && (
-            <div className="form-section">
-              <h3 className="section-title">Notes & Research</h3>
-              <div className="form-group">
-                <label htmlFor="notes" className="form-label">
-                  <FileText className="label-icon" weight="regular" />
+            <div className='form-section'>
+              <h3 className='section-title'>Notes & Research</h3>
+              <div className='form-group'>
+                <label htmlFor='notes' className='form-label'>
+                  <FileText className='label-icon' weight='regular' />
                   General Notes
                 </label>
                 <textarea
-                  id="notes"
+                  id='notes'
                   value={formData.notes}
                   onChange={(e) => handleInputChange('notes', e.target.value)}
-                  className="form-input"
-                  placeholder="Enter general notes about this person"
+                  className='form-input'
+                  placeholder='Enter general notes about this person'
                   rows={4}
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="researchNotes" className="form-label">
-                  <FileText className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='researchNotes' className='form-label'>
+                  <FileText className='label-icon' weight='regular' />
                   Research Notes
                 </label>
                 <textarea
-                  id="researchNotes"
+                  id='researchNotes'
                   value={formData.researchNotes}
-                  onChange={(e) => handleInputChange('researchNotes', e.target.value)}
-                  className="form-input"
-                  placeholder="Enter research notes and findings"
+                  onChange={(e) =>
+                    handleInputChange('researchNotes', e.target.value)
+                  }
+                  className='form-input'
+                  placeholder='Enter research notes and findings'
                   rows={4}
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="sources" className="form-label">
-                  <FileText className="label-icon" weight="regular" />
+              <div className='form-group'>
+                <label htmlFor='sources' className='form-label'>
+                  <FileText className='label-icon' weight='regular' />
                   Sources
                 </label>
                 <input
-                  type="text"
-                  id="sources"
+                  type='text'
+                  id='sources'
                   value={formData.sources}
                   onChange={(e) => handleInputChange('sources', e.target.value)}
-                  className="form-input"
-                  placeholder="Separate multiple sources with commas"
+                  className='form-input'
+                  placeholder='Separate multiple sources with commas'
                 />
               </div>
             </div>
           )}
 
-          <div className="form-actions">
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={onCancel}
-            >
+          <div className='form-actions'>
+            <button type='button' className='cancel-btn' onClick={onCancel}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="save-btn"
-            >
+            <button type='submit' className='save-btn'>
               {person ? 'Update Person' : 'Add Person'}
             </button>
           </div>

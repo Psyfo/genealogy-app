@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
-import neo4j, { Driver } from "neo4j-driver";
-import { v4 as uuidv4 } from "uuid";
-import { LifeEvent, Person } from "@/types/person";
+import dotenv from 'dotenv';
+import neo4j, { Driver } from 'neo4j-driver';
+import { v4 as uuidv4 } from 'uuid';
+import { Person } from '@/types/person';
 
 dotenv.config({ path: '.env.local' }); // load .env.local explicitly
 
@@ -44,55 +44,57 @@ async function seed() {
     ): Person {
       const id = uuidv4();
       const birthYear = new Date(birthDate).getFullYear();
-      const deathYear = additionalData.deathDate ? new Date(additionalData.deathDate).getFullYear() : null;
-      
+      const deathYear = additionalData.deathDate
+        ? new Date(additionalData.deathDate).getFullYear()
+        : null;
+
       return {
         id,
         firstName,
-        middleName: null,
+        middleName: undefined,
         lastName,
-        maidenName: null,
-        suffix: null,
+        maidenName: undefined,
+        suffix: undefined,
         gender,
         birthDate,
-        birthPlace: null,
-        deathDate: null,
-        deathPlace: null,
-        causeOfDeath: null,
-        height: null,
-        weight: null,
-        eyeColor: null,
-        hairColor: null,
-        distinguishingMarks: null,
-        fatherId: null,
-        motherId: null,
-        spouseIds: [],
-        childrenIds: [],
-        siblingIds: [],
-        occupation: null,
-        employer: null,
-        education: null,
-        militaryService: null,
-        currentAddress: null,
-        phoneNumber: null,
-        email: null,
-        nationality: null,
-        ethnicity: null,
-        religion: null,
-        politicalAffiliation: null,
-        lifeEvents: [],
-        bloodType: null,
-        medicalConditions: [],
-        allergies: [],
-        notes: null,
-        researchNotes: null,
-        sources: [],
+        birthPlace: undefined,
+        deathDate: undefined,
+        deathPlace: undefined,
+        causeOfDeath: undefined,
+        height: undefined,
+        weight: undefined,
+        eyeColor: undefined,
+        hairColor: undefined,
+        distinguishingMarks: undefined,
+        fatherId: undefined,
+        motherId: undefined,
+        spouseIds: undefined,
+        childrenIds: undefined,
+        siblingIds: undefined,
+        occupation: undefined,
+        employer: undefined,
+        education: undefined,
+        militaryService: undefined,
+        currentAddress: undefined,
+        phoneNumber: undefined,
+        email: undefined,
+        nationality: undefined,
+        ethnicity: undefined,
+        religion: undefined,
+        politicalAffiliation: undefined,
+        lifeEvents: undefined,
+        bloodType: undefined,
+        medicalConditions: undefined,
+        allergies: undefined,
+        notes: undefined,
+        researchNotes: undefined,
+        sources: undefined,
         lastUpdated: new Date().toISOString(),
         createdBy: 'seed-script',
         name: `${firstName} ${lastName}`,
         birthYear,
-        deathYear,
-        ...additionalData
+        deathYear: deathYear ?? undefined,
+        ...additionalData,
       };
     }
 
@@ -105,7 +107,7 @@ async function seed() {
         deathPlace: 'Manchester, England',
         occupation: 'Factory Worker',
         nationality: 'British',
-        notes: 'Served in World War II'
+        notes: 'Served in World War II',
       }),
       createPersonData('Margaret', 'Smith', '1923-07-08', 'female', {
         maidenName: 'Thompson',
@@ -113,7 +115,7 @@ async function seed() {
         deathDate: '2001-12-03',
         deathPlace: 'Manchester, England',
         occupation: 'Nurse',
-        nationality: 'British'
+        nationality: 'British',
       }),
       createPersonData('Robert', 'Johnson', '1918-11-20', 'male', {
         birthPlace: 'Glasgow, Scotland',
@@ -121,7 +123,7 @@ async function seed() {
         deathPlace: 'Edinburgh, Scotland',
         occupation: 'Engineer',
         nationality: 'Scottish',
-        militaryService: 'Royal Air Force, WWII'
+        militaryService: 'Royal Air Force, WWII',
       }),
       createPersonData('Elizabeth', 'Johnson', '1921-05-12', 'female', {
         maidenName: 'Brown',
@@ -129,7 +131,7 @@ async function seed() {
         deathDate: '1992-09-18',
         deathPlace: 'Edinburgh, Scotland',
         occupation: 'Teacher',
-        nationality: 'Scottish'
+        nationality: 'Scottish',
       }),
 
       // Parents Generation
@@ -143,7 +145,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0123',
         email: 'john.smith@email.com',
         bloodType: 'O+',
-        notes: 'Retired engineer, enjoys gardening and woodworking'
+        notes: 'Retired engineer, enjoys gardening and woodworking',
       }),
       createPersonData('Mary', 'Smith', '1947-09-25', 'female', {
         maidenName: 'Johnson',
@@ -156,7 +158,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0124',
         email: 'mary.smith@email.com',
         bloodType: 'A+',
-        notes: 'Retired teacher, active in local community groups'
+        notes: 'Retired teacher, active in local community groups',
       }),
       createPersonData('David', 'Williams', '1950-02-14', 'male', {
         birthPlace: 'Cardiff, Wales',
@@ -169,7 +171,7 @@ async function seed() {
         email: 'david.williams@nhs.uk',
         bloodType: 'B+',
         militaryService: 'Royal Army Medical Corps, 1970-1972',
-        notes: 'Cardiologist, published several research papers'
+        notes: 'Cardiologist, published several research papers',
       }),
       createPersonData('Patricia', 'Williams', '1952-08-30', 'female', {
         maidenName: 'Davis',
@@ -182,7 +184,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0457',
         email: 'patricia.williams@nhs.uk',
         bloodType: 'AB+',
-        notes: 'Senior nurse, specialized in cardiac care'
+        notes: 'Senior nurse, specialized in cardiac care',
       }),
 
       // Children Generation
@@ -196,7 +198,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0789',
         email: 'robert.smith@techsolutions.com',
         bloodType: 'O+',
-        notes: 'Specializes in web development and database design'
+        notes: 'Specializes in web development and database design',
       }),
       createPersonData('Linda', 'Johnson', '1972-12-05', 'female', {
         maidenName: 'Smith',
@@ -209,7 +211,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0790',
         email: 'linda.johnson@digitalmarketing.com',
         bloodType: 'A-',
-        notes: 'Expert in digital marketing and social media'
+        notes: 'Expert in digital marketing and social media',
       }),
       createPersonData('Sarah', 'Williams', '1975-03-22', 'female', {
         birthPlace: 'Manchester, England',
@@ -221,7 +223,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0321',
         email: 'sarah.williams@manchesterlegal.com',
         bloodType: 'B-',
-        notes: 'Specializes in family law and estate planning'
+        notes: 'Specializes in family law and estate planning',
       }),
       createPersonData('Michael', 'Williams', '1978-11-08', 'male', {
         birthPlace: 'Manchester, England',
@@ -233,7 +235,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0654',
         email: 'michael.williams@designstudio.com',
         bloodType: 'AB-',
-        notes: 'Award-winning architect, specializes in sustainable design'
+        notes: 'Award-winning architect, specializes in sustainable design',
       }),
 
       // Grandchildren Generation
@@ -246,7 +248,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0791',
         email: 'emily.smith@student.manchester.ac.uk',
         bloodType: 'A+',
-        notes: 'Currently studying psychology, interested in clinical practice'
+        notes: 'Currently studying psychology, interested in clinical practice',
       }),
       createPersonData('James', 'Smith', '1998-01-30', 'male', {
         birthPlace: 'Manchester, England',
@@ -257,7 +259,8 @@ async function seed() {
         phoneNumber: '+44-161-555-0792',
         email: 'james.smith@student.manchester.ac.uk',
         bloodType: 'O-',
-        notes: 'Studying mechanical engineering, following in grandfather\'s footsteps'
+        notes:
+          "Studying mechanical engineering, following in grandfather's footsteps",
       }),
       createPersonData('Olivia', 'Williams', '2000-09-12', 'female', {
         birthPlace: 'Manchester, England',
@@ -268,7 +271,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0322',
         email: 'olivia.williams@student.email.com',
         bloodType: 'B+',
-        notes: 'High school student, interested in art and design'
+        notes: 'High school student, interested in art and design',
       }),
       createPersonData('Daniel', 'Williams', '2003-05-25', 'male', {
         birthPlace: 'Manchester, England',
@@ -279,7 +282,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0323',
         email: 'daniel.williams@student.email.com',
         bloodType: 'AB+',
-        notes: 'High school student, interested in computer science'
+        notes: 'High school student, interested in computer science',
       }),
       createPersonData('Sophia', 'Williams', '2005-12-18', 'female', {
         birthPlace: 'Manchester, England',
@@ -290,7 +293,7 @@ async function seed() {
         phoneNumber: '+44-161-555-0655',
         email: 'sophia.williams@student.email.com',
         bloodType: 'A-',
-        notes: 'Elementary school student, loves reading and music'
+        notes: 'Elementary school student, loves reading and music',
       }),
       createPersonData('Lucas', 'Williams', '2008-08-03', 'male', {
         birthPlace: 'Manchester, England',
@@ -301,8 +304,8 @@ async function seed() {
         phoneNumber: '+44-161-555-0656',
         email: 'lucas.williams@student.email.com',
         bloodType: 'O+',
-        notes: 'Elementary school student, interested in sports and science'
-      })
+        notes: 'Elementary school student, interested in sports and science',
+      }),
     ];
 
     console.log('[seed] Creating %d people...', people.length);
@@ -368,15 +371,15 @@ async function seed() {
       // Grandparents marriages
       { fromId: people[0].id, toId: people[1].id, type: 'MARRIED_TO' }, // William Smith - Margaret Smith
       { fromId: people[2].id, toId: people[3].id, type: 'MARRIED_TO' }, // Robert Johnson - Elizabeth Johnson
-      
+
       // Parents marriages
       { fromId: people[4].id, toId: people[5].id, type: 'MARRIED_TO' }, // John Smith - Mary Smith
       { fromId: people[6].id, toId: people[7].id, type: 'MARRIED_TO' }, // David Williams - Patricia Williams
-      
+
       // Children marriages
       { fromId: people[8].id, toId: people[9].id, type: 'MARRIED_TO' }, // Robert Smith - Linda Johnson
       { fromId: people[10].id, toId: people[11].id, type: 'MARRIED_TO' }, // Sarah Williams - Michael Williams
-      
+
       // Parent-Child relationships (Grandparents to Parents)
       { fromId: people[4].id, toId: people[0].id, type: 'CHILD_OF' }, // John Smith - William Smith (father)
       { fromId: people[4].id, toId: people[1].id, type: 'CHILD_OF' }, // John Smith - Margaret Smith (mother)
@@ -386,7 +389,7 @@ async function seed() {
       { fromId: people[6].id, toId: people[3].id, type: 'CHILD_OF' }, // David Williams - Elizabeth Johnson (mother)
       { fromId: people[7].id, toId: people[0].id, type: 'CHILD_OF' }, // Patricia Williams - William Smith (father)
       { fromId: people[7].id, toId: people[1].id, type: 'CHILD_OF' }, // Patricia Williams - Margaret Smith (mother)
-      
+
       // Parent-Child relationships (Parents to Children)
       { fromId: people[8].id, toId: people[4].id, type: 'CHILD_OF' }, // Robert Smith - John Smith (father)
       { fromId: people[8].id, toId: people[5].id, type: 'CHILD_OF' }, // Robert Smith - Mary Smith (mother)
@@ -394,7 +397,7 @@ async function seed() {
       { fromId: people[10].id, toId: people[7].id, type: 'CHILD_OF' }, // Sarah Williams - Patricia Williams (mother)
       { fromId: people[11].id, toId: people[6].id, type: 'CHILD_OF' }, // Michael Williams - David Williams (father)
       { fromId: people[11].id, toId: people[7].id, type: 'CHILD_OF' }, // Michael Williams - Patricia Williams (mother)
-      
+
       // Parent-Child relationships (Children to Grandchildren)
       { fromId: people[12].id, toId: people[8].id, type: 'CHILD_OF' }, // Emily Smith - Robert Smith (father)
       { fromId: people[12].id, toId: people[9].id, type: 'CHILD_OF' }, // Emily Smith - Linda Johnson (mother)
@@ -424,7 +427,10 @@ async function seed() {
               MATCH (a:Person {id: $fromId}), (b:Person {id: $toId})
               MERGE (a)-[:CHILD_OF]->(b)
             `;
-        const res = await tx.run(cypher, { fromId: rel.fromId, toId: rel.toId });
+        const res = await tx.run(cypher, {
+          fromId: rel.fromId,
+          toId: rel.toId,
+        });
         if (res.summary.counters.updates().relationshipsCreated === 0) {
           console.warn('[seed] Relationship not created (IDs missing?)', rel);
         }

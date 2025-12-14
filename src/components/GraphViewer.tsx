@@ -1,14 +1,17 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 // Dynamically import ForceGraph2D to avoid SSR issues
+// Note: Using 'any' for dynamic import is acceptable as the library doesn't export full TS types
+// and we're dynamically loading it client-side only
 const ForceGraph2D = dynamic(
   () => import('react-force-graph-2d'),
-  { 
+  {
     ssr: false,
-    loading: () => <div className="loading-graph">Loading graph...</div>
+    loading: () => <div className='loading-graph'>Loading graph...</div>,
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as React.ComponentType<any>;
 
 interface GraphNode {
@@ -35,12 +38,12 @@ export default function GraphViewer() {
   const [data, setData] = useState<GraphData | null>(null);
   const [hoverNode, setHoverNode] = useState<GraphNode | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const fgRef = useRef<ForceGraphMethods | undefined>(undefined);
+  const fgRef = useRef<ForceGraphMethods>(null);
 
   useEffect(() => {
     // Set client-side flag
     setIsClient(true);
-    
+
     let cancelled = false;
     (async () => {
       try {
@@ -124,8 +127,8 @@ export default function GraphViewer() {
   // Don't render on server-side
   if (!isClient) {
     return (
-      <div className="loading-graph">
-        <div className="loading-spinner"></div>
+      <div className='loading-graph'>
+        <div className='loading-spinner'></div>
         <p>Loading graph...</p>
       </div>
     );
@@ -133,26 +136,26 @@ export default function GraphViewer() {
 
   if (!data) {
     return (
-      <div className="loading-graph">
-        <div className="loading-spinner"></div>
+      <div className='loading-graph'>
+        <div className='loading-spinner'></div>
         <p>Loading graph data...</p>
       </div>
     );
   }
 
   return (
-    <div className="graph-container">
+    <div className='graph-container'>
       <ForceGraph2D
         ref={fgRef}
         graphData={data}
-        backgroundColor="#0f172a"
-        nodeId="id"
-        nodeLabel="name"
-        linkLabel="type"
+        backgroundColor='#0f172a'
+        nodeId='id'
+        nodeLabel={(node: GraphNode) => node.name}
+        linkLabel='type'
         linkColor={(l: GraphLink) =>
           hoverNode && (l.source === hoverNode || l.target === hoverNode)
-            ? "#f59e0b"
-            : "#64748b"
+            ? '#f59e0b'
+            : '#64748b'
         }
         linkWidth={(l: GraphLink) =>
           hoverNode && (l.source === hoverNode || l.target === hoverNode)
@@ -163,10 +166,14 @@ export default function GraphViewer() {
         linkDirectionalArrowRelPos={0.95}
         onNodeHover={(node: GraphNode | null) => {
           setHoverNode(node);
-          setCursor(node ? "pointer" : "default");
+          setCursor(node ? 'pointer' : 'default');
         }}
         nodeCanvasObject={nodePaint}
-        nodePointerAreaPaint={(node: GraphNode & { x?: number; y?: number }, color: string, ctx: CanvasRenderingContext2D) => {
+        nodePointerAreaPaint={(
+          node: GraphNode & { x?: number; y?: number },
+          color: string,
+          ctx: CanvasRenderingContext2D
+        ) => {
           const x = node.x ?? 0;
           const y = node.y ?? 0;
           ctx.fillStyle = color;
@@ -177,7 +184,7 @@ export default function GraphViewer() {
         height={600}
         width={1000}
       />
-      
+
       <style jsx>{`
         .graph-container {
           border-radius: 12px;
@@ -208,8 +215,12 @@ export default function GraphViewer() {
         }
 
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
         .loading-graph p {

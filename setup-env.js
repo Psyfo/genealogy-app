@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
+// Using CommonJS for Node.js script compatibility
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path');
 
 const envContent = `# Neo4j Database Configuration
