@@ -3,22 +3,22 @@ import { useState } from 'react';
 import { LifeEvent, Person } from '@/types/person';
 
 import {
-  Briefcase,
-  Calendar,
-  Envelope,
-  FileText,
-  GraduationCap,
-  Heart,
-  MapPin,
-  Phone,
-  Plus,
-  Shield,
-  Stethoscope,
-  Trash,
-  User,
-  UserCircle,
-  Users,
-  X,
+  BriefcaseIcon,
+  CalendarIcon,
+  EnvelopeIcon,
+  FileTextIcon,
+  GraduationCapIcon,
+  HeartIcon,
+  MapPinIcon,
+  PhoneIcon,
+  PlusIcon,
+  ShieldIcon,
+  StethoscopeIcon,
+  TrashIcon,
+  UserIcon,
+  UserCircleIcon,
+  UsersIcon,
+  XIcon,
 } from '@phosphor-icons/react';
 
 interface PersonFormProps {
@@ -366,14 +366,14 @@ export default function PersonForm({
   };
 
   const tabs = [
-    { id: 'basic', label: 'Basic Info', icon: User },
-    { id: 'personal', label: 'Personal', icon: UserCircle },
-    { id: 'physical', label: 'Physical', icon: UserCircle },
-    { id: 'professional', label: 'Professional', icon: Briefcase },
-    { id: 'contact', label: 'Contact', icon: Phone },
-    { id: 'life', label: 'Life Events', icon: Heart },
-    { id: 'medical', label: 'Medical', icon: Stethoscope },
-    { id: 'notes', label: 'Notes', icon: FileText },
+    { id: 'basic', label: 'Basic Info', icon: UserIcon },
+    { id: 'personal', label: 'Personal', icon: UserCircleIcon },
+    { id: 'physical', label: 'Physical', icon: UserCircleIcon },
+    { id: 'professional', label: 'Professional', icon: BriefcaseIcon },
+    { id: 'contact', label: 'Contact', icon: PhoneIcon },
+    { id: 'life', label: 'Life Events', icon: HeartIcon },
+    { id: 'medical', label: 'Medical', icon: StethoscopeIcon },
+    { id: 'notes', label: 'Notes', icon: FileTextIcon },
   ];
 
   return (
@@ -386,7 +386,7 @@ export default function PersonForm({
             onClick={onCancel}
             aria-label='Close form'
           >
-            <X className='close-icon' weight='bold' />
+            <XIcon className='close-icon' weight='bold' />
           </button>
         </div>
 
@@ -418,7 +418,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='firstName' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     First Name *
                   </label>
                   <input
@@ -439,7 +439,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='middleName' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     Middle Name
                   </label>
                   <input
@@ -458,7 +458,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='lastName' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     Last Name *
                   </label>
                   <input
@@ -478,7 +478,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='maidenName' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     Maiden Name
                   </label>
                   <input
@@ -497,7 +497,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='suffix' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     Suffix
                   </label>
                   <input
@@ -514,7 +514,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='gender' className='form-label'>
-                    <User className='label-icon' weight='regular' />
+                    <UserIcon className='label-icon' weight='regular' />
                     Gender
                   </label>
                   <select
@@ -543,7 +543,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='birthDate' className='form-label'>
-                    <Calendar className='label-icon' weight='regular' />
+                    <CalendarIcon className='label-icon' weight='regular' />
                     Birth Date
                   </label>
                   <input
@@ -562,7 +562,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='birthPlace' className='form-label'>
-                    <MapPin className='label-icon' weight='regular' />
+                    <MapPinIcon className='label-icon' weight='regular' />
                     Birth Place
                   </label>
                   <input
@@ -590,7 +590,7 @@ export default function PersonForm({
                 <div className='form-row'>
                   <div className='form-group'>
                     <label htmlFor='deathDate' className='form-label'>
-                      <Calendar className='label-icon' weight='regular' />
+                      <CalendarIcon className='label-icon' weight='regular' />
                       Death Date
                     </label>
                     <input
@@ -611,7 +611,7 @@ export default function PersonForm({
 
                   <div className='form-group'>
                     <label htmlFor='deathPlace' className='form-label'>
-                      <MapPin className='label-icon' weight='regular' />
+                      <MapPinIcon className='label-icon' weight='regular' />
                       Death Place
                     </label>
                     <input
@@ -629,7 +629,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='causeOfDeath' className='form-label'>
-                    <Stethoscope className='label-icon' weight='regular' />
+                    <StethoscopeIcon className='label-icon' weight='regular' />
                     Cause of Death
                   </label>
                   <input
@@ -654,7 +654,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='height' className='form-label'>
-                    <UserCircle className='label-icon' weight='regular' />
+                    <UserCircleIcon className='label-icon' weight='regular' />
                     Height
                   </label>
                   <input
@@ -671,7 +671,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='weight' className='form-label'>
-                    <UserCircle className='label-icon' weight='regular' />
+                    <UserCircleIcon className='label-icon' weight='regular' />
                     Weight
                   </label>
                   <input
@@ -690,7 +690,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='eyeColor' className='form-label'>
-                    <UserCircle className='label-icon' weight='regular' />
+                    <UserCircleIcon className='label-icon' weight='regular' />
                     Eye Color
                   </label>
                   <input
@@ -707,7 +707,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='hairColor' className='form-label'>
-                    <UserCircle className='label-icon' weight='regular' />
+                    <UserCircleIcon className='label-icon' weight='regular' />
                     Hair Color
                   </label>
                   <input
@@ -725,7 +725,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='distinguishingMarks' className='form-label'>
-                  <UserCircle className='label-icon' weight='regular' />
+                  <UserCircleIcon className='label-icon' weight='regular' />
                   Distinguishing Marks
                 </label>
                 <textarea
@@ -748,7 +748,7 @@ export default function PersonForm({
               <h3 className='section-title'>Professional & Education</h3>
               <div className='form-group'>
                 <label htmlFor='occupation' className='form-label'>
-                  <Briefcase className='label-icon' weight='regular' />
+                  <BriefcaseIcon className='label-icon' weight='regular' />
                   Occupation
                 </label>
                 <input
@@ -765,7 +765,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='employer' className='form-label'>
-                  <Briefcase className='label-icon' weight='regular' />
+                  <BriefcaseIcon className='label-icon' weight='regular' />
                   Employer
                 </label>
                 <input
@@ -782,7 +782,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='education' className='form-label'>
-                  <GraduationCap className='label-icon' weight='regular' />
+                  <GraduationCapIcon className='label-icon' weight='regular' />
                   Education
                 </label>
                 <input
@@ -799,7 +799,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='militaryService' className='form-label'>
-                  <Shield className='label-icon' weight='regular' />
+                  <ShieldIcon className='label-icon' weight='regular' />
                   Military Service
                 </label>
                 <input
@@ -822,7 +822,7 @@ export default function PersonForm({
               <h3 className='section-title'>Contact & Location</h3>
               <div className='form-group'>
                 <label htmlFor='currentAddress' className='form-label'>
-                  <MapPin className='label-icon' weight='regular' />
+                  <MapPinIcon className='label-icon' weight='regular' />
                   Current Address
                 </label>
                 <textarea
@@ -840,7 +840,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='phoneNumber' className='form-label'>
-                    <Phone className='label-icon' weight='regular' />
+                    <PhoneIcon className='label-icon' weight='regular' />
                     Phone Number
                   </label>
                   <input
@@ -862,7 +862,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='email' className='form-label'>
-                    <Envelope className='label-icon' weight='regular' />
+                    <EnvelopeIcon className='label-icon' weight='regular' />
                     Email
                   </label>
                   <input
@@ -882,7 +882,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='nationality' className='form-label'>
-                    <MapPin className='label-icon' weight='regular' />
+                    <MapPinIcon className='label-icon' weight='regular' />
                     Nationality
                   </label>
                   <input
@@ -899,7 +899,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='ethnicity' className='form-label'>
-                    <Users className='label-icon' weight='regular' />
+                    <UsersIcon className='label-icon' weight='regular' />
                     Ethnicity
                   </label>
                   <input
@@ -918,7 +918,7 @@ export default function PersonForm({
               <div className='form-row'>
                 <div className='form-group'>
                   <label htmlFor='religion' className='form-label'>
-                    <Users className='label-icon' weight='regular' />
+                    <UsersIcon className='label-icon' weight='regular' />
                     Religion
                   </label>
                   <input
@@ -935,7 +935,7 @@ export default function PersonForm({
 
                 <div className='form-group'>
                   <label htmlFor='politicalAffiliation' className='form-label'>
-                    <Users className='label-icon' weight='regular' />
+                    <UsersIcon className='label-icon' weight='regular' />
                     Political Affiliation
                   </label>
                   <input
@@ -974,14 +974,17 @@ export default function PersonForm({
                         onClick={() => removeLifeEvent(index)}
                         aria-label='Remove event'
                       >
-                        <Trash className='remove-icon' weight='regular' />
+                        <TrashIcon className='remove-icon' weight='regular' />
                       </button>
                     </div>
 
                     <div className='form-row'>
                       <div className='form-group'>
                         <label className='form-label'>
-                          <Calendar className='label-icon' weight='regular' />
+                          <CalendarIcon
+                            className='label-icon'
+                            weight='regular'
+                          />
                           Event Description *
                         </label>
                         <input
@@ -997,7 +1000,10 @@ export default function PersonForm({
 
                       <div className='form-group'>
                         <label className='form-label'>
-                          <Calendar className='label-icon' weight='regular' />
+                          <CalendarIcon
+                            className='label-icon'
+                            weight='regular'
+                          />
                           Date *
                         </label>
                         <input
@@ -1014,7 +1020,7 @@ export default function PersonForm({
                     <div className='form-row'>
                       <div className='form-group'>
                         <label className='form-label'>
-                          <MapPin className='label-icon' weight='regular' />
+                          <MapPinIcon className='label-icon' weight='regular' />
                           Place
                         </label>
                         <input
@@ -1030,7 +1036,10 @@ export default function PersonForm({
 
                       <div className='form-group'>
                         <label className='form-label'>
-                          <FileText className='label-icon' weight='regular' />
+                          <FileTextIcon
+                            className='label-icon'
+                            weight='regular'
+                          />
                           Notes
                         </label>
                         <input
@@ -1052,7 +1061,7 @@ export default function PersonForm({
                   className='add-event-btn'
                   onClick={addLifeEvent}
                 >
-                  <Plus className='add-icon' weight='regular' />
+                  <PlusIcon className='add-icon' weight='regular' />
                   Add Life Event
                 </button>
               </div>
@@ -1065,7 +1074,7 @@ export default function PersonForm({
               <h3 className='section-title'>Medical Information</h3>
               <div className='form-group'>
                 <label htmlFor='bloodType' className='form-label'>
-                  <Stethoscope className='label-icon' weight='regular' />
+                  <StethoscopeIcon className='label-icon' weight='regular' />
                   Blood Type
                 </label>
                 <select
@@ -1093,7 +1102,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='medicalConditions' className='form-label'>
-                  <Stethoscope className='label-icon' weight='regular' />
+                  <StethoscopeIcon className='label-icon' weight='regular' />
                   Medical Conditions
                 </label>
                 <input
@@ -1110,7 +1119,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='allergies' className='form-label'>
-                  <Stethoscope className='label-icon' weight='regular' />
+                  <StethoscopeIcon className='label-icon' weight='regular' />
                   Allergies
                 </label>
                 <input
@@ -1133,7 +1142,7 @@ export default function PersonForm({
               <h3 className='section-title'>Notes & Research</h3>
               <div className='form-group'>
                 <label htmlFor='notes' className='form-label'>
-                  <FileText className='label-icon' weight='regular' />
+                  <FileTextIcon className='label-icon' weight='regular' />
                   General Notes
                 </label>
                 <textarea
@@ -1148,7 +1157,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='researchNotes' className='form-label'>
-                  <FileText className='label-icon' weight='regular' />
+                  <FileTextIcon className='label-icon' weight='regular' />
                   Research Notes
                 </label>
                 <textarea
@@ -1165,7 +1174,7 @@ export default function PersonForm({
 
               <div className='form-group'>
                 <label htmlFor='sources' className='form-label'>
-                  <FileText className='label-icon' weight='regular' />
+                  <FileTextIcon className='label-icon' weight='regular' />
                   Sources
                 </label>
                 <input

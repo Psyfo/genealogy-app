@@ -1,14 +1,14 @@
-"use client";
-import { Person } from "@/types/person";
+'use client';
+import { Person } from '@/types/person';
 
 import {
-  Calendar,
-  Envelope,
-  MapPin,
-  PencilSimple,
-  Trash,
-  User,
-  Users,
+  CalendarIcon,
+  EnvelopeIcon,
+  MapPinIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+  UserIcon,
+  UsersIcon,
 } from '@phosphor-icons/react';
 
 interface PersonCardProps {
@@ -18,7 +18,12 @@ interface PersonCardProps {
   onManageRelationships: (person: Person) => void;
 }
 
-export default function PersonCard({ person, onEdit, onDelete, onManageRelationships }: PersonCardProps) {
+export default function PersonCard({
+  person,
+  onEdit,
+  onDelete,
+  onManageRelationships,
+}: PersonCardProps) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Unknown';
     const date = new Date(dateString);
@@ -55,111 +60,117 @@ export default function PersonCard({ person, onEdit, onDelete, onManageRelations
 
   const getDisplayName = () => {
     if (person.name) return person.name;
-    
+
     const parts = [];
     if (person.firstName) parts.push(person.firstName);
     if (person.middleName) parts.push(person.middleName);
     if (person.lastName) parts.push(person.lastName);
     if (person.suffix) parts.push(person.suffix);
-    
+
     return parts.join(' ') || 'Unknown Name';
   };
 
   return (
-    <div className="person-card">
-      <div className="card-header">
-        <div className="person-avatar">
-          <User className="avatar-icon" weight="fill" />
+    <div className='person-card'>
+      <div className='card-header'>
+        <div className='person-avatar'>
+          <UserIcon className='avatar-icon' weight='fill' />
         </div>
-        <div className="person-info">
-          <h3 className="person-name">{getDisplayName()}</h3>
-          <p className="person-age">{getAgeText()}</p>
+        <div className='person-info'>
+          <h3 className='person-name'>{getDisplayName()}</h3>
+          <p className='person-age'>{getAgeText()}</p>
           {person.occupation && (
-            <p className="person-occupation">{person.occupation}</p>
+            <p className='person-occupation'>{person.occupation}</p>
           )}
         </div>
-        <div className="card-actions">
+        <div className='card-actions'>
           <button
-            className="action-btn relationships-btn"
+            className='action-btn relationships-btn'
             onClick={() => onManageRelationships(person)}
-            title="Manage relationships"
+            title='Manage relationships'
           >
-            <Users className="action-icon" weight="regular" />
+            <UsersIcon className='action-icon' weight='regular' />
           </button>
           <button
-            className="action-btn edit-btn"
+            className='action-btn edit-btn'
             onClick={() => onEdit(person)}
-            title="Edit person"
+            title='Edit person'
           >
-            <PencilSimple className="action-icon" weight="regular" />
+            <PencilSimpleIcon className='action-icon' weight='regular' />
           </button>
           <button
-            className="action-btn delete-btn"
+            className='action-btn delete-btn'
             onClick={() => onDelete(person)}
-            title="Delete person"
+            title='Delete person'
           >
-            <Trash className="action-icon" weight="regular" />
+            <TrashIcon className='action-icon' weight='regular' />
           </button>
         </div>
       </div>
 
-      <div className="card-details">
-        <div className="detail-item">
-          <Calendar className="detail-icon" weight="regular" />
-          <div className="detail-content">
-            <span className="detail-label">Born:</span>
-            <span className="detail-value">
-              {person.birthDate ? formatDate(person.birthDate) : formatYear(person.birthYear)}
+      <div className='card-details'>
+        <div className='detail-item'>
+          <CalendarIcon className='detail-icon' weight='regular' />
+          <div className='detail-content'>
+            <span className='detail-label'>Born:</span>
+            <span className='detail-value'>
+              {person.birthDate
+                ? formatDate(person.birthDate)
+                : formatYear(person.birthYear)}
             </span>
           </div>
         </div>
-        
+
         {person.birthPlace && (
-          <div className="detail-item">
-            <MapPin className="detail-icon" weight="regular" />
-            <div className="detail-content">
-              <span className="detail-label">Birth Place:</span>
-              <span className="detail-value">{person.birthPlace}</span>
+          <div className='detail-item'>
+            <MapPinIcon className='detail-icon' weight='regular' />
+            <div className='detail-content'>
+              <span className='detail-label'>Birth Place:</span>
+              <span className='detail-value'>{person.birthPlace}</span>
             </div>
           </div>
         )}
-        
+
         {person.deathDate && (
-          <div className="detail-item">
-            <Calendar className="detail-icon" weight="regular" />
-            <div className="detail-content">
-              <span className="detail-label">Died:</span>
-              <span className="detail-value">{formatDate(person.deathDate)}</span>
+          <div className='detail-item'>
+            <CalendarIcon className='detail-icon' weight='regular' />
+            <div className='detail-content'>
+              <span className='detail-label'>Died:</span>
+              <span className='detail-value'>
+                {formatDate(person.deathDate)}
+              </span>
             </div>
           </div>
         )}
 
         {person.deathYear && !person.deathDate && (
-          <div className="detail-item">
-            <Calendar className="detail-icon" weight="regular" />
-            <div className="detail-content">
-              <span className="detail-label">Died:</span>
-              <span className="detail-value">{formatYear(person.deathYear)}</span>
+          <div className='detail-item'>
+            <CalendarIcon className='detail-icon' weight='regular' />
+            <div className='detail-content'>
+              <span className='detail-label'>Died:</span>
+              <span className='detail-value'>
+                {formatYear(person.deathYear)}
+              </span>
             </div>
           </div>
         )}
 
         {person.gender && (
-          <div className="detail-item">
-            <User className="detail-icon" weight="regular" />
-            <div className="detail-content">
-              <span className="detail-label">Gender:</span>
-              <span className="detail-value">{person.gender}</span>
+          <div className='detail-item'>
+            <UserIcon className='detail-icon' weight='regular' />
+            <div className='detail-content'>
+              <span className='detail-label'>Gender:</span>
+              <span className='detail-value'>{person.gender}</span>
             </div>
           </div>
         )}
 
         {person.email && (
-          <div className="detail-item">
-            <Envelope className="detail-icon" weight="regular" />
-            <div className="detail-content">
-              <span className="detail-label">Email:</span>
-              <span className="detail-value">{person.email}</span>
+          <div className='detail-item'>
+            <EnvelopeIcon className='detail-icon' weight='regular' />
+            <div className='detail-content'>
+              <span className='detail-label'>Email:</span>
+              <span className='detail-value'>{person.email}</span>
             </div>
           </div>
         )}

@@ -4,18 +4,18 @@ import { createPortal } from 'react-dom';
 import { Person } from '@/types/person';
 
 import {
-  Calendar,
-  CaretDown,
-  CaretUp,
-  Heart,
-  MagnifyingGlass,
-  MapPin,
-  Plus,
-  Trash,
-  User,
-  UserCircle,
-  Users,
-  X,
+  CalendarIcon,
+  CaretDownIcon,
+  CaretUpIcon,
+  HeartIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  PlusIcon,
+  TrashIcon,
+  UserIcon,
+  UserCircleIcon,
+  UsersIcon,
+  XIcon,
 } from '@phosphor-icons/react';
 
 interface RelationshipManagerProps {
@@ -232,7 +232,7 @@ export default function RelationshipManager({
         <div className='flex justify-between items-center p-6 border-brown-rust/10 border-b'>
           <div className='flex-1'>
             <h2 className='flex items-center gap-2 mb-1 font-heading font-semibold text-brown-rust text-2xl'>
-              <Heart className='w-6 h-6' weight='fill' />
+              <HeartIcon className='w-6 h-6' weight='fill' />
               Family Relationships
             </h2>
             <p className='font-body text-brown-rust/70 text-sm'>
@@ -244,7 +244,7 @@ export default function RelationshipManager({
             onClick={onClose}
             aria-label='Close relationships'
           >
-            <X className='w-5 h-5' weight='bold' />
+            <XIcon className='w-5 h-5' weight='bold' />
           </button>
         </div>
 
@@ -252,8 +252,7 @@ export default function RelationshipManager({
           {/* Person Info Card */}
           <div className='flex items-center gap-4 bg-brown-rust/5 mb-6 p-4 rounded-lg'>
             <div className='flex-shrink-0'>
-              <UserCircle
-                className='w-12 h-12 text-brown-rust/60'
+              <UserCircleIcon                 className='w-12 h-12 text-brown-rust/60'
                 weight='fill'
               />
             </div>
@@ -264,19 +263,19 @@ export default function RelationshipManager({
               <div className='flex flex-wrap gap-4 text-brown-rust/70 text-sm'>
                 {person.birthDate && (
                   <span className='flex items-center gap-1'>
-                    <Calendar className='w-4 h-4' weight='regular' />
+                    <CalendarIcon className='w-4 h-4' weight='regular' />
                     Born {new Date(person.birthDate).getFullYear()}
                   </span>
                 )}
                 {person.birthPlace && (
                   <span className='flex items-center gap-1'>
-                    <MapPin className='w-4 h-4' weight='regular' />
+                    <MapPinIcon className='w-4 h-4' weight='regular' />
                     {person.birthPlace}
                   </span>
                 )}
                 {person.occupation && (
                   <span className='flex items-center gap-1'>
-                    <User className='w-4 h-4' weight='regular' />
+                    <UserIcon className='w-4 h-4' weight='regular' />
                     {person.occupation}
                   </span>
                 )}
@@ -292,7 +291,7 @@ export default function RelationshipManager({
                 className='hover:bg-brown-rust/10 p-1 rounded transition-colors duration-200'
                 onClick={() => setError(null)}
               >
-                <X className='w-4 h-4' weight='bold' />
+                <XIcon className='w-4 h-4' weight='bold' />
               </button>
             </div>
           )}
@@ -306,7 +305,10 @@ export default function RelationshipManager({
                 onClick={() => toggleSection('parents')}
               >
                 <div className='flex items-center gap-3'>
-                  <User className='w-5 h-5 text-brown-rust' weight='regular' />
+                  <UserIcon
+                    className='w-5 h-5 text-brown-rust'
+                    weight='regular'
+                  />
                   <span className='font-heading font-medium text-brown-rust text-lg'>
                     Parents
                   </span>
@@ -315,10 +317,12 @@ export default function RelationshipManager({
                   </span>
                 </div>
                 {expandedSections.parents ? (
-                  <CaretUp className='w-5 h-5 text-brown-rust' weight='bold' />
-                ) : (
-                  <CaretDown
+                  <CaretUpIcon
                     className='w-5 h-5 text-brown-rust'
+                    weight='bold'
+                  />
+                ) : (
+                  <CaretDownIcon                     className='w-5 h-5 text-brown-rust'
                     weight='bold'
                   />
                 )}
@@ -333,8 +337,7 @@ export default function RelationshipManager({
                         className='flex justify-between items-center bg-brown-rust/5 p-3 border border-brown-rust/20 rounded-lg'
                       >
                         <div className='flex items-center gap-3'>
-                          <UserCircle
-                            className='w-8 h-8 text-brown-rust/60'
+                          <UserCircleIcon                             className='w-8 h-8 text-brown-rust/60'
                             weight='fill'
                           />
                           <div>
@@ -358,15 +361,14 @@ export default function RelationshipManager({
                             parent.id === person.fatherId ? 'father' : 'mother'
                           }`}
                         >
-                          <Trash className='w-4 h-4' weight='regular' />
+                          <TrashIcon className='w-4 h-4' weight='regular' />
                         </button>
                       </div>
                     ))}
 
                     {familyMembers.parents.length === 0 && (
                       <div className='py-8 text-brown-rust/60 text-center'>
-                        <User
-                          className='opacity-60 mx-auto mb-2 w-8 h-8'
+                        <UserIcon                           className='opacity-60 mx-auto mb-2 w-8 h-8'
                           weight='regular'
                         />
                         <p className='font-body text-sm'>
@@ -384,8 +386,7 @@ export default function RelationshipManager({
                       </h4>
                       <div className='space-y-3'>
                         <div className='relative'>
-                          <MagnifyingGlass
-                            className='top-1/2 left-3 absolute w-4 h-4 text-brown-rust/60 -translate-y-1/2 transform'
+                          <MagnifyingGlassIcon                             className='top-1/2 left-3 absolute w-4 h-4 text-brown-rust/60 -translate-y-1/2 transform'
                             weight='regular'
                           />
                           <input
@@ -454,7 +455,7 @@ export default function RelationshipManager({
                           onClick={handleAddRelationship}
                           disabled={!selectedPerson}
                         >
-                          <Plus className='w-4 h-4' weight='regular' />
+                          <PlusIcon className='w-4 h-4' weight='regular' />
                           Add{' '}
                           {relationshipType === 'father' ? 'Father' : 'Mother'}
                         </button>
@@ -472,7 +473,10 @@ export default function RelationshipManager({
                 onClick={() => toggleSection('children')}
               >
                 <div className='flex items-center gap-3'>
-                  <Users className='w-5 h-5 text-brown-rust' weight='regular' />
+                  <UsersIcon
+                    className='w-5 h-5 text-brown-rust'
+                    weight='regular'
+                  />
                   <span className='font-heading font-medium text-brown-rust text-lg'>
                     Children
                   </span>
@@ -481,10 +485,12 @@ export default function RelationshipManager({
                   </span>
                 </div>
                 {expandedSections.children ? (
-                  <CaretUp className='w-5 h-5 text-brown-rust' weight='bold' />
-                ) : (
-                  <CaretDown
+                  <CaretUpIcon
                     className='w-5 h-5 text-brown-rust'
+                    weight='bold'
+                  />
+                ) : (
+                  <CaretDownIcon                     className='w-5 h-5 text-brown-rust'
                     weight='bold'
                   />
                 )}
@@ -498,8 +504,7 @@ export default function RelationshipManager({
                         key={child.id}
                         className='flex items-center gap-3 bg-brown-rust/5 p-3 border border-brown-rust/20 rounded-lg'
                       >
-                        <UserCircle
-                          className='w-8 h-8 text-brown-rust/60'
+                        <UserCircleIcon                           className='w-8 h-8 text-brown-rust/60'
                           weight='fill'
                         />
                         <div>
@@ -518,8 +523,7 @@ export default function RelationshipManager({
 
                     {familyMembers.children.length === 0 && (
                       <div className='py-8 text-brown-rust/60 text-center'>
-                        <Users
-                          className='opacity-60 mx-auto mb-2 w-8 h-8'
+                        <UsersIcon                           className='opacity-60 mx-auto mb-2 w-8 h-8'
                           weight='regular'
                         />
                         <p className='font-body text-sm'>
@@ -539,7 +543,10 @@ export default function RelationshipManager({
                 onClick={() => toggleSection('siblings')}
               >
                 <div className='flex items-center gap-3'>
-                  <Users className='w-5 h-5 text-brown-rust' weight='regular' />
+                  <UsersIcon
+                    className='w-5 h-5 text-brown-rust'
+                    weight='regular'
+                  />
                   <span className='font-heading font-medium text-brown-rust text-lg'>
                     Siblings
                   </span>
@@ -548,10 +555,12 @@ export default function RelationshipManager({
                   </span>
                 </div>
                 {expandedSections.siblings ? (
-                  <CaretUp className='w-5 h-5 text-brown-rust' weight='bold' />
-                ) : (
-                  <CaretDown
+                  <CaretUpIcon
                     className='w-5 h-5 text-brown-rust'
+                    weight='bold'
+                  />
+                ) : (
+                  <CaretDownIcon                     className='w-5 h-5 text-brown-rust'
                     weight='bold'
                   />
                 )}
@@ -565,8 +574,7 @@ export default function RelationshipManager({
                         key={sibling.id}
                         className='flex items-center gap-3 bg-brown-rust/5 p-3 border border-brown-rust/20 rounded-lg'
                       >
-                        <UserCircle
-                          className='w-8 h-8 text-brown-rust/60'
+                        <UserCircleIcon                           className='w-8 h-8 text-brown-rust/60'
                           weight='fill'
                         />
                         <div>
@@ -585,8 +593,7 @@ export default function RelationshipManager({
 
                     {familyMembers.siblings.length === 0 && (
                       <div className='py-8 text-brown-rust/60 text-center'>
-                        <Users
-                          className='opacity-60 mx-auto mb-2 w-8 h-8'
+                        <UsersIcon                           className='opacity-60 mx-auto mb-2 w-8 h-8'
                           weight='regular'
                         />
                         <p className='font-body text-sm'>No siblings found</p>

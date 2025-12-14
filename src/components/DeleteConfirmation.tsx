@@ -1,6 +1,6 @@
-"use client";
-import { Trash, Warning, X } from "@phosphor-icons/react";
-import { Person } from "@/types/person";
+'use client';
+import { TrashIcon, WarningIcon, XIcon } from '@phosphor-icons/react';
+import { Person } from '@/types/person';
 
 interface DeleteConfirmationProps {
   person: Person;
@@ -8,75 +8,75 @@ interface DeleteConfirmationProps {
   onCancel: () => void;
 }
 
-export default function DeleteConfirmation({ person, onConfirm, onCancel }: DeleteConfirmationProps) {
+export default function DeleteConfirmation({
+  person,
+  onConfirm,
+  onCancel,
+}: DeleteConfirmationProps) {
   const handleConfirm = () => {
     onConfirm();
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <div className="warning-icon">
-            <Warning className="warning-icon-svg" weight="fill" />
+    <div className='modal-overlay'>
+      <div className='modal-content'>
+        <div className='modal-header'>
+          <div className='warning-icon'>
+            <WarningIcon className='warning-icon-svg' weight='fill' />
           </div>
-          <h2 className="modal-title">Delete Person</h2>
+          <h2 className='modal-title'>Delete Person</h2>
           <button
-            className="close-btn"
+            className='close-btn'
             onClick={onCancel}
-            aria-label="Close confirmation"
+            aria-label='Close confirmation'
           >
-            <X className="close-icon" weight="bold" />
+            <XIcon className='close-icon' weight='bold' />
           </button>
         </div>
 
-        <div className="modal-body">
-          <p className="confirmation-text">
-            Are you sure you want to delete <strong>{person.name}</strong> from your family tree?
+        <div className='modal-body'>
+          <p className='confirmation-text'>
+            Are you sure you want to delete <strong>{person.name}</strong> from
+            your family tree?
           </p>
-          
-          <div className="person-details">
-            <div className="detail-item">
-              <span className="detail-label">Name:</span>
-              <span className="detail-value">{person.name}</span>
+
+          <div className='person-details'>
+            <div className='detail-item'>
+              <span className='detail-label'>Name:</span>
+              <span className='detail-value'>{person.name}</span>
             </div>
             {person.birthYear && (
-              <div className="detail-item">
-                <span className="detail-label">Born:</span>
-                <span className="detail-value">{person.birthYear}</span>
+              <div className='detail-item'>
+                <span className='detail-label'>Born:</span>
+                <span className='detail-value'>{person.birthYear}</span>
               </div>
             )}
             {person.deathYear && (
-              <div className="detail-item">
-                <span className="detail-label">Died:</span>
-                <span className="detail-value">{person.deathYear}</span>
+              <div className='detail-item'>
+                <span className='detail-label'>Died:</span>
+                <span className='detail-value'>{person.deathYear}</span>
               </div>
             )}
           </div>
 
-          <div className="warning-box">
-            <Warning className="warning-icon-small" weight="regular" />
-            <div className="warning-content">
-              <p className="warning-title">This action cannot be undone</p>
-              <p className="warning-description">
-                This will permanently remove the person and all their relationships from your family tree.
+          <div className='warning-box'>
+            <WarningIcon className='warning-icon-small' weight='regular' />
+            <div className='warning-content'>
+              <p className='warning-title'>This action cannot be undone</p>
+              <p className='warning-description'>
+                This will permanently remove the person and all their
+                relationships from your family tree.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="modal-actions">
-          <button
-            className="cancel-btn"
-            onClick={onCancel}
-          >
+        <div className='modal-actions'>
+          <button className='cancel-btn' onClick={onCancel}>
             Cancel
           </button>
-          <button
-            className="delete-btn"
-            onClick={handleConfirm}
-          >
-            <Trash className="delete-icon" weight="regular" />
+          <button className='delete-btn' onClick={handleConfirm}>
+            <TrashIcon className='delete-icon' weight='regular' />
             Delete Person
           </button>
         </div>

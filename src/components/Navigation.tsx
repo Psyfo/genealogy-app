@@ -1,7 +1,7 @@
-"use client";
-import Link from "next/link";
-import { Gear, Tree, User, Users } from "@phosphor-icons/react";
-import { useState } from "react";
+'use client';
+import Link from 'next/link';
+import { GearIcon, TreeIcon, UserIcon, UsersIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 
 interface NavigationProps {
   currentPage?: string;
@@ -15,98 +15,106 @@ export default function Navigation({ currentPage = 'tree' }: NavigationProps) {
       id: 'tree',
       label: 'Family Tree',
       description: 'Visualize your family connections',
-      icon: Tree,
+      icon: TreeIcon,
       href: '/',
-      available: true
+      available: true,
     },
     {
       id: 'people',
       label: 'People',
       description: 'Manage family members',
-      icon: Users,
+      icon: UsersIcon,
       href: '/people',
-      available: true
+      available: true,
     },
     {
       id: 'settings',
       label: 'Settings',
       description: 'App preferences',
-      icon: Gear,
+      icon: GearIcon,
       href: '/settings',
-      available: true
-    }
+      available: true,
+    },
   ];
 
   const availableItems = navigationItems;
 
   return (
-    <nav className="navigation">
+    <nav className='navigation'>
       {/* Mobile Menu Button */}
       <button
-        className="mobile-menu-button"
+        className='mobile-menu-button'
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        aria-label="Toggle navigation menu"
+        aria-label='Toggle navigation menu'
       >
-        <span className="hamburger-line"></span>
-        <span className="hamburger-line"></span>
-        <span className="hamburger-line"></span>
+        <span className='hamburger-line'></span>
+        <span className='hamburger-line'></span>
+        <span className='hamburger-line'></span>
       </button>
 
       {/* Navigation Content */}
-      <div className={`navigation-content ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-         {/* Logo and App Title */}
-         <div className="nav-header">
-           <div className="nav-logo">
-             <Tree className="logo-icon" weight="fill" />
-             <div className="logo-text">
-               <h2 className="app-name">Family Tree</h2>
-               <p className="app-tagline">Discover Your Heritage</p>
-             </div>
-           </div>
-         </div>
+      <div
+        className={`navigation-content ${
+          isMobileMenuOpen ? 'mobile-open' : ''
+        }`}
+      >
+        {/* Logo and App Title */}
+        <div className='nav-header'>
+          <div className='nav-logo'>
+            <TreeIcon className='logo-icon' weight='fill' />
+            <div className='logo-text'>
+              <h2 className='app-name'>Family Tree</h2>
+              <p className='app-tagline'>Discover Your Heritage</p>
+            </div>
+          </div>
+        </div>
 
         {/* Navigation Items */}
-        <div className="nav-section">
-          <ul className="nav-list">
-             {availableItems.map((item) => {
-               const IconComponent = item.icon;
-               return (
-                 <li key={item.id} className="nav-item">
-                   <Link
-                     href={item.href}
-                     className={`nav-link ${currentPage === item.id ? 'active' : ''}`}
-                     onClick={() => setIsMobileMenuOpen(false)}
-                   >
-                     <IconComponent className="nav-icon" weight="regular" />
-                     <div className="nav-text">
-                       <span className="nav-label">{item.label}</span>
-                       <span className="nav-description">{item.description}</span>
-                     </div>
-                   </Link>
-                 </li>
-               );
-             })}
+        <div className='nav-section'>
+          <ul className='nav-list'>
+            {availableItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <li key={item.id} className='nav-item'>
+                  <Link
+                    href={item.href}
+                    className={`nav-link ${
+                      currentPage === item.id ? 'active' : ''
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <IconComponent className='nav-icon' weight='regular' />
+                    <div className='nav-text'>
+                      <span className='nav-label'>{item.label}</span>
+                      <span className='nav-description'>
+                        {item.description}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
-         {/* User Profile Section */}
-         <div className="nav-footer">
-           <div className="user-profile">
-             <div className="user-avatar">
-               <User className="avatar-icon" weight="fill" />
-             </div>
-             <div className="user-info">
-               <span className="user-name">Family Researcher</span>
-               <span className="user-status">Active</span>
-             </div>
-           </div>
-         </div>
+        {/* User Profile Section */}
+        <div className='nav-footer'>
+          <div className='user-profile'>
+            <div className='user-avatar'>
+              <UserIcon className='avatar-icon' weight='fill' />
+            </div>
+            <div className='user-info'>
+              <span className='user-name'>Family Researcher</span>
+              <span className='user-status'>Active</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <div 
-          className="mobile-overlay"
+        <div
+          className='mobile-overlay'
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
@@ -167,12 +175,12 @@ export default function Navigation({ currentPage = 'tree' }: NavigationProps) {
           gap: 1rem;
         }
 
-         .logo-icon {
-           width: 2rem;
-           height: 2rem;
-           color: #a65e3a;
-           filter: drop-shadow(0 2px 4px rgba(166, 94, 58, 0.2));
-         }
+        .logo-icon {
+          width: 2rem;
+          height: 2rem;
+          color: #a65e3a;
+          filter: drop-shadow(0 2px 4px rgba(166, 94, 58, 0.2));
+        }
 
         .app-name {
           font-family: 'Cormorant Garamond', serif;
@@ -242,12 +250,12 @@ export default function Navigation({ currentPage = 'tree' }: NavigationProps) {
           cursor: not-allowed;
         }
 
-         .nav-icon {
-           width: 1.25rem;
-           height: 1.25rem;
-           color: #a65e3a;
-           flex-shrink: 0;
-         }
+        .nav-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          color: #a65e3a;
+          flex-shrink: 0;
+        }
 
         .nav-text {
           display: flex;
@@ -302,11 +310,11 @@ export default function Navigation({ currentPage = 'tree' }: NavigationProps) {
           justify-content: center;
         }
 
-         .avatar-icon {
-           width: 1.25rem;
-           height: 1.25rem;
-           color: #f8e8b4;
-         }
+        .avatar-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          color: #f8e8b4;
+        }
 
         .user-info {
           display: flex;
