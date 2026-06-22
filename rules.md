@@ -356,5 +356,5 @@ Before submitting code, verify:
 ---
 
 **Last Updated**: June 22, 2026
-**Project**: Mahlangu (genealogy)
+**Project**: Kindred (genealogy)
 **Stack**: Next.js 16, React 19, TypeScript, Neo4j, Zod, Tailwind CSS v4
