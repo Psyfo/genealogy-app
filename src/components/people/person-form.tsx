@@ -13,7 +13,7 @@ type FormState = Record<string, string>;
 const FIELDS = [
   'givenName', 'familyName', 'otherNames', 'maidenName', 'gender',
   'birthDate', 'birthPlace', 'deathDate', 'deathPlace',
-  'occupation', 'clanPraise', 'bio', 'photoUrl',
+  'occupation', 'motto', 'bio', 'photoUrl',
 ] as const;
 
 function toFormState(person?: Person): FormState {
@@ -120,15 +120,15 @@ export function PersonForm({ person, onSuccess, onCancel }: PersonFormProps) {
         </Field>
       </div>
 
-      <Field label="Clan praise (isithakazelo)" htmlFor="clanPraise" error={errors.clanPraise}>
-        <Input id="clanPraise" value={state.clanPraise} onChange={set('clanPraise')} placeholder="Mahlangu, Mnguni…" />
+      <Field label="Family motto or honorific" htmlFor="motto" error={errors.motto}>
+        <Input id="motto" value={state.motto} onChange={set('motto')} placeholder="Hold fast." />
       </Field>
       <Field label="Story" htmlFor="bio" hint="A few lines about their life" error={errors.bio}>
         <Textarea id="bio" value={state.bio} onChange={set('bio')} rows={4} />
       </Field>
 
       {serverError && (
-        <p className="rounded-sm border-2 border-vermilion bg-vermilion/10 px-3 py-2 text-sm font-medium text-vermilion">
+        <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm font-medium text-danger">
           {serverError}
         </p>
       )}

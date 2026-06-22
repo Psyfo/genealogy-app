@@ -7,7 +7,7 @@ import { fullName, initials, isLiving, lifespan } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { Person } from '@/types/person';
 
-const ACCENTS = ['bg-cobalt', 'bg-vermilion', 'bg-emerald', 'bg-magenta', 'bg-marigold'] as const;
+const ACCENTS = ['bg-evergreen', 'bg-amber', 'bg-terracotta', 'bg-sage', 'bg-clay'] as const;
 
 function accentFor(seed: string): string {
   let hash = 0;
@@ -22,18 +22,14 @@ export function PersonCard({ person }: { person: Person }) {
   return (
     <Link
       href={`/people/${person.id}`}
-      className="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt"
+      className="group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-evergreen"
     >
-      <article className="h-full overflow-hidden rounded-sm border-2 border-ink bg-paper shadow-block-sm transition-all duration-150 group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-block">
+      <article className="h-full overflow-hidden rounded-lg border border-hairline bg-paper shadow-soft transition-all duration-200 group-hover:-translate-y-0.5 group-hover:shadow-soft-lg">
         <div className={cn('h-1.5 w-full', accentFor(person.id))} />
         <div className="flex items-start gap-3 p-4">
-          <Avatar
-            initials={initials(person)}
-            seed={person.id}
-            className="size-12 text-lg"
-          />
+          <Avatar initials={initials(person)} seed={person.id} className="size-12 text-lg" />
           <div className="min-w-0 flex-1">
-            <h3 className="truncate font-display text-lg font-bold leading-tight">
+            <h3 className="truncate font-display text-lg font-semibold leading-tight">
               {fullName(person)}
             </h3>
             {person.maidenName && (
@@ -42,9 +38,7 @@ export function PersonCard({ person }: { person: Person }) {
               </p>
             )}
             {span && (
-              <p className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
-                {span}
-              </p>
+              <p className="mt-1 text-xs tabular-nums text-muted-foreground">{span}</p>
             )}
           </div>
         </div>
@@ -61,9 +55,7 @@ export function PersonCard({ person }: { person: Person }) {
               {person.birthPlace}
             </Badge>
           )}
-          <Badge tone={living ? 'emerald' : 'neutral'}>
-            {living ? 'Living' : 'In memory'}
-          </Badge>
+          <Badge tone={living ? 'sage' : 'neutral'}>{living ? 'Living' : 'In memory'}</Badge>
         </div>
       </article>
     </Link>

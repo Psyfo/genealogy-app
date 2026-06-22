@@ -43,7 +43,7 @@ export function PersonActions({ person }: { person: Person }) {
         Edit
       </Button>
       <Button variant="ghost" size="icon" aria-label="Remove person" onClick={() => setConfirming(true)}>
-        <Trash2 className="text-vermilion" />
+        <Trash2 className="text-danger" />
       </Button>
 
       <Dialog open={editing} onOpenChange={setEditing}>

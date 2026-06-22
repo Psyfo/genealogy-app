@@ -26,7 +26,7 @@ export function RelativesPanel({ relatives }: { relatives: Relatives }) {
 
   if (isEmpty) {
     return (
-      <p className="rounded-sm border-2 border-dashed border-ink/30 bg-paper/50 px-4 py-6 text-sm text-muted-foreground">
+      <p className="rounded-lg border border-dashed border-hairline bg-parchment/40 px-4 py-6 text-sm text-muted-foreground">
         No relationships recorded yet. Use “Manage connections” to link parents,
         children or a spouse.
       </p>
