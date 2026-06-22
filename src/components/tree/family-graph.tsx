@@ -15,9 +15,10 @@ import type {
 
 type ForceGraphComponent = typeof import('react-force-graph-2d')['default'];
 
-const GEN_COLORS = ['#1f44c2', '#df3b2c', '#1b8f5d', '#c3338a', '#f3b324', '#6fb1da'];
-const INK = '#15110d';
-const PAPER = '#fffdf8';
+const GEN_COLORS = ['#2f5d50', '#c88a3a', '#bf6242', '#7d9384', '#a8573e', '#244a40'];
+const INK = '#2b2620';
+const PAPER = '#fffdf9';
+const MARRIAGE = '#bf6242';
 const X_GAP = 90;
 const GEN_GAP = 120;
 
@@ -160,7 +161,7 @@ export function FamilyGraph({ data }: { data: GraphData }) {
   return (
     <div
       ref={wrapRef}
-      className="relative h-[72vh] min-h-[480px] w-full overflow-hidden rounded-lg border-2 border-ink bg-bone shadow-block"
+      className="relative h-[72vh] min-h-[480px] w-full overflow-hidden rounded-lg border border-hairline bg-paper shadow-soft"
     >
       {Graph && (
         <Graph
@@ -178,7 +179,7 @@ export function FamilyGraph({ data }: { data: GraphData }) {
               fgRef.current?.zoomToFit(400, 60);
             }
           }}
-          linkColor={(link) => ((link as GraphLink).type === 'MARRIED_TO' ? '#c3338a' : INK)}
+          linkColor={(link) => ((link as GraphLink).type === 'MARRIED_TO' ? MARRIAGE : INK)}
           linkWidth={(link) => ((link as GraphLink).type === 'MARRIED_TO' ? 1.5 : 2)}
           linkLineDash={(link) => ((link as GraphLink).type === 'MARRIED_TO' ? [5, 4] : null)}
           linkDirectionalArrowLength={(link) =>
@@ -203,7 +204,7 @@ export function FamilyGraph({ data }: { data: GraphData }) {
             if (isSelected) {
               ctx.beginPath();
               ctx.arc(n.x, n.y, radius + 3.5, 0, 2 * Math.PI);
-              ctx.strokeStyle = '#1f44c2';
+              ctx.strokeStyle = '#2f5d50';
               ctx.lineWidth = 2 / globalScale;
               ctx.stroke();
             }
@@ -222,7 +223,7 @@ export function FamilyGraph({ data }: { data: GraphData }) {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             ctx.lineWidth = 3 / globalScale;
-            ctx.strokeStyle = 'rgba(245,239,226,0.95)';
+            ctx.strokeStyle = 'rgba(250,246,239,0.95)';
             ctx.strokeText(label, n.x, n.y + radius + 2.5);
             ctx.fillStyle = INK;
             ctx.fillText(label, n.x, n.y + radius + 2.5);
@@ -231,41 +232,41 @@ export function FamilyGraph({ data }: { data: GraphData }) {
       )}
 
       {/* Legend */}
-      <div className="pointer-events-none absolute bottom-3 left-3 flex flex-col gap-1.5 rounded-sm border-2 border-ink bg-paper/90 px-3 py-2 text-xs shadow-block-sm backdrop-blur-sm">
+      <div className="pointer-events-none absolute bottom-3 left-3 flex flex-col gap-1.5 rounded-lg border border-hairline bg-paper/90 px-3 py-2 text-xs shadow-soft backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="inline-block h-0 w-5 border-b-2 border-ink" />
           <span>Parent → child</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-block h-0 w-5 border-b-2 border-dashed border-magenta" />
+          <span className="inline-block h-0 w-5 border-b-2 border-dashed border-terracotta" />
           <span>Marriage</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-block size-3 rounded-full border-2 border-ink bg-cobalt" />
+          <span className="inline-block size-3 rounded-full border border-ink bg-evergreen" />
           <span>Living</span>
-          <span className="ml-1 inline-block size-3 rounded-full border-2 border-cobalt bg-paper" />
+          <span className="ml-1 inline-block size-3 rounded-full border-2 border-evergreen bg-paper" />
           <span>In memory</span>
         </div>
       </div>
 
       {/* Detail panel */}
       {selected && (
-        <div className="absolute right-3 top-3 w-60 rounded-sm border-2 border-ink bg-paper p-4 shadow-block">
+        <div className="absolute right-3 top-3 w-60 rounded-lg border border-hairline bg-paper p-4 shadow-soft-lg">
           <button
             type="button"
             onClick={() => setSelected(null)}
             aria-label="Close"
-            className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-sm text-muted-foreground hover:bg-sand hover:text-ink"
+            className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground hover:bg-parchment hover:text-ink"
           >
             <X className="size-3.5" />
           </button>
-          <p className="pr-6 font-display text-lg font-bold leading-tight">{selected.name}</p>
+          <p className="pr-6 font-display text-lg font-semibold leading-tight">{selected.name}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <Badge tone="neutral" className="font-mono tabular-nums">
+            <Badge tone="neutral" className="tabular-nums">
               {selected.birthYear ?? '—'}
               {selected.deathYear ? `–${selected.deathYear}` : selected.living ? '–' : ''}
             </Badge>
-            <Badge tone="cobalt">Generation {selected.generation + 1}</Badge>
+            <Badge tone="evergreen">Generation {selected.generation + 1}</Badge>
           </div>
           <Link
             href={`/people/${selected.id}`}

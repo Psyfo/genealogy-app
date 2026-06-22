@@ -101,7 +101,7 @@ export function RelationshipManager({
           {items.map((item) => (
             <li
               key={`${label}-${item.id}`}
-              className="flex items-center justify-between gap-2 rounded-sm border-2 border-ink bg-paper px-3 py-1.5 text-sm"
+              className="flex items-center justify-between gap-2 rounded-lg border border-hairline bg-paper px-3 py-1.5 text-sm"
             >
               <span className="truncate font-medium">{item.name}</span>
               <button
@@ -109,7 +109,7 @@ export function RelationshipManager({
                 onClick={() => void send('DELETE', item.remove)}
                 disabled={busy}
                 aria-label={`Remove ${item.name}`}
-                className="inline-flex size-6 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-vermilion hover:text-primary-foreground disabled:opacity-50"
+                className="inline-flex size-6 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-danger hover:text-primary-foreground disabled:opacity-50"
               >
                 <X className="size-3.5" />
               </button>
@@ -155,7 +155,7 @@ export function RelationshipManager({
       </div>
 
       {error && (
-        <p className="rounded-sm border-2 border-vermilion bg-vermilion/10 px-3 py-2 text-sm font-medium text-vermilion">
+        <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm font-medium text-danger">
           {error}
         </p>
       )}

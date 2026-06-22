@@ -67,7 +67,7 @@ export function PeopleExplorer({ initialPeople }: { initialPeople: Person[] }) {
       </div>
 
       {people.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-sm border-2 border-dashed border-ink/30 bg-paper/50 px-6 py-16 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-hairline bg-parchment/40 px-6 py-16 text-center">
           <UsersRound className="size-8 text-muted-foreground" />
           <p className="font-display text-xl font-bold">
             {query ? 'No one by that name' : 'No people yet'}
