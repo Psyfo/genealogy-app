@@ -68,20 +68,22 @@ function computeGenerations(
   return memo;
 }
 
-export async function getGraph(): Promise<GraphData> {
+export async function getGraph(ownerId: string): Promise<GraphData> {
   const [nodeRows, linkRows] = await Promise.all([
     read<NodeRow>(
-      `MATCH (p:Person)
+      `MATCH (p:Person { ownerId: $ownerId })
        RETURN p.id AS id, p.givenName AS givenName, p.familyName AS familyName,
               p.gender AS gender, p.birthDate AS birthDate, p.deathDate AS deathDate`,
+      { ownerId },
     ),
     read<LinkRow>(
-      `MATCH (a:Person)-[:PARENT_OF]->(b:Person)
+      `MATCH (a:Person { ownerId: $ownerId })-[:PARENT_OF]->(b:Person { ownerId: $ownerId })
        RETURN a.id AS source, b.id AS target, 'PARENT_OF' AS type
        UNION
-       MATCH (a:Person)-[:MARRIED_TO]-(b:Person)
+       MATCH (a:Person { ownerId: $ownerId })-[:MARRIED_TO]-(b:Person { ownerId: $ownerId })
        WHERE a.id < b.id
        RETURN a.id AS source, b.id AS target, 'MARRIED_TO' AS type`,
+      { ownerId },
     ),
   ]);
 

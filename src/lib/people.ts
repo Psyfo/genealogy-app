@@ -8,14 +8,15 @@ import {
   type PersonUpdate,
 } from './validation';
 
-/** Map projection returning every stored property of a :Person node. */
+/**
+ * Every query is scoped by `ownerId` so each account sees and touches only its
+ * own tree. The projection drops ownerId — personSchema strips unknown keys.
+ */
 const PROJECTION = 'p { .* } AS person';
 
 type PersonRow = { person: Record<string, unknown> };
 
 function toPerson(row: PersonRow): Person {
-  // The DB is a trusted boundary, but parsing keeps the type honest and strips
-  // any drift between the stored shape and the schema.
   return personSchema.parse(row.person);
 }
 
@@ -26,35 +27,36 @@ function defined(obj: Record<string, unknown>): Record<string, unknown> {
   );
 }
 
-export async function listPeople(search?: string): Promise<Person[]> {
+export async function listPeople(ownerId: string, search?: string): Promise<Person[]> {
   const term = search?.trim().toLowerCase();
   const rows = await read<PersonRow>(
-    `MATCH (p:Person)
+    `MATCH (p:Person { ownerId: $ownerId })
      ${term ? `WHERE toLower(p.givenName) CONTAINS $term
                   OR toLower(p.familyName) CONTAINS $term
                   OR toLower(coalesce(p.otherNames, '')) CONTAINS $term
                   OR toLower(coalesce(p.maidenName, '')) CONTAINS $term` : ''}
      RETURN ${PROJECTION}
      ORDER BY p.familyName, p.givenName`,
-    term ? { term } : {},
+    term ? { ownerId, term } : { ownerId },
   );
   return rows.map(toPerson);
 }
 
-export async function getPerson(id: string): Promise<Person | null> {
+export async function getPerson(ownerId: string, id: string): Promise<Person | null> {
   const rows = await read<PersonRow>(
-    `MATCH (p:Person { id: $id }) RETURN ${PROJECTION}`,
-    { id },
+    `MATCH (p:Person { id: $id, ownerId: $ownerId }) RETURN ${PROJECTION}`,
+    { id, ownerId },
   );
   return rows.length ? toPerson(rows[0]) : null;
 }
 
-export async function createPerson(input: PersonInput): Promise<Person> {
+export async function createPerson(ownerId: string, input: PersonInput): Promise<Person> {
   const data = personInputSchema.parse(input);
   const now = new Date().toISOString();
   const props = defined({
     ...data,
     id: crypto.randomUUID(),
+    ownerId,
     createdAt: now,
     updatedAt: now,
   });
@@ -67,6 +69,7 @@ export async function createPerson(input: PersonInput): Promise<Person> {
 }
 
 export async function updatePerson(
+  ownerId: string,
   id: string,
   patch: PersonUpdate,
 ): Promise<Person | null> {
@@ -74,28 +77,29 @@ export async function updatePerson(
   const props = defined({ ...data, updatedAt: new Date().toISOString() });
 
   const rows = await write<PersonRow>(
-    `MATCH (p:Person { id: $id })
+    `MATCH (p:Person { id: $id, ownerId: $ownerId })
      SET p += $props
      RETURN ${PROJECTION}`,
-    { id, props },
+    { id, ownerId, props },
   );
   return rows.length ? toPerson(rows[0]) : null;
 }
 
-export async function deletePerson(id: string): Promise<boolean> {
+export async function deletePerson(ownerId: string, id: string): Promise<boolean> {
   const rows = await write<{ deleted: number }>(
-    `MATCH (p:Person { id: $id })
+    `MATCH (p:Person { id: $id, ownerId: $ownerId })
      WITH p, count(p) AS c
      DETACH DELETE p
      RETURN c AS deleted`,
-    { id },
+    { id, ownerId },
   );
   return (rows[0]?.deleted ?? 0) > 0;
 }
 
-export async function countPeople(): Promise<number> {
+export async function countPeople(ownerId: string): Promise<number> {
   const rows = await read<{ total: number }>(
-    'MATCH (p:Person) RETURN count(p) AS total',
+    'MATCH (p:Person { ownerId: $ownerId }) RETURN count(p) AS total',
+    { ownerId },
   );
   return rows[0]?.total ?? 0;
 }
