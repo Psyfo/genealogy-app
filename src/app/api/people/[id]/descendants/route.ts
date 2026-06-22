@@ -1,18 +1,18 @@
-import { NextResponse } from 'next/server';
-
+import { apiError, json } from '@/lib/api';
 import { getDescendants } from '@/lib/relationships';
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params; // await params per Next.js requirement
-  const { searchParams } = new URL(req.url);
-  const depthParam = searchParams.get('depth');
-  const depth = depthParam ? parseInt(depthParam, 10) : undefined;
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-  console.debug('[API descendants] id=%s depth=%s', id, depth);
+type Context = { params: Promise<{ id: string }> };
 
-  const data = await getDescendants(id, depth);
-  return NextResponse.json(data);
+export async function GET(request: Request, { params }: Context): Promise<Response> {
+  try {
+    const { id } = await params;
+    const depthParam = new URL(request.url).searchParams.get('depth');
+    const depth = depthParam ? Number.parseInt(depthParam, 10) : undefined;
+    return json(await getDescendants(id, depth));
+  } catch (error) {
+    return apiError(error);
+  }
 }

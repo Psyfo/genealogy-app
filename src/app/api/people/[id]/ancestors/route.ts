@@ -1,18 +1,18 @@
-import { NextResponse } from 'next/server';
-
+import { apiError, json } from '@/lib/api';
 import { getAncestors } from '@/lib/relationships';
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const { searchParams } = new URL(req.url);
-  const depthParam = searchParams.get('depth');
-  const depth = depthParam ? parseInt(depthParam, 10) : undefined;
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-  console.debug('[API ancestors] id=%s depth=%s', id, depth);
+type Context = { params: Promise<{ id: string }> };
 
-  const data = await getAncestors(id, depth);
-  return NextResponse.json(data);
+export async function GET(request: Request, { params }: Context): Promise<Response> {
+  try {
+    const { id } = await params;
+    const depthParam = new URL(request.url).searchParams.get('depth');
+    const depth = depthParam ? Number.parseInt(depthParam, 10) : undefined;
+    return json(await getAncestors(id, depth));
+  } catch (error) {
+    return apiError(error);
+  }
 }

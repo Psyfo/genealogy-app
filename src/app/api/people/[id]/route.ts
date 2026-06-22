@@ -1,136 +1,49 @@
-import { NextResponse } from 'next/server';
-import { deletePerson, getPersonById, updatePerson } from '@/lib/people';
+import { apiError, json } from '@/lib/api';
+import { deletePerson, getPerson, updatePerson } from '@/lib/people';
+import { getRelatives } from '@/lib/relationships';
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+type Context = { params: Promise<{ id: string }> };
+
+export async function GET(_request: Request, { params }: Context): Promise<Response> {
   try {
     const { id } = await params;
-    const person = await getPersonById(id);
-
+    const person = await getPerson(id);
     if (!person) {
-      return NextResponse.json({ error: 'Person not found' }, { status: 404 });
+      return Response.json({ error: { message: 'Person not found.' } }, { status: 404 });
     }
-
-    return NextResponse.json(person);
+    const relatives = await getRelatives(id);
+    return json({ person, relatives });
   } catch (error) {
-    console.error('Error fetching person:', error);
-
-    // Check if it's a validation error (invalid ID format)
-    if (error instanceof Error && error.message.includes('Invalid ID')) {
-      return NextResponse.json(
-        {
-          error: 'Invalid person ID',
-          details: error.message,
-        },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch person',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return apiError(error);
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
+export async function PATCH(request: Request, { params }: Context): Promise<Response> {
   try {
     const { id } = await params;
-    const data = await req.json();
-
-    // Validate request body
-    if (!data || typeof data !== 'object') {
-      return NextResponse.json(
-        { error: 'Invalid request body' },
-        { status: 400 }
-      );
+    const body = await request.json();
+    const person = await updatePerson(id, body);
+    if (!person) {
+      return Response.json({ error: { message: 'Person not found.' } }, { status: 404 });
     }
-
-    // Update the person
-    const updatedPerson = await updatePerson(id, data);
-
-    return NextResponse.json({
-      status: 'ok',
-      person: updatedPerson,
-    });
+    return json(person);
   } catch (error) {
-    console.error('Error updating person:', error);
-
-    // Check if it's a validation error
-    if (
-      error instanceof Error &&
-      (error.message.includes('Validation failed') ||
-        error.message.includes('Invalid ID'))
-    ) {
-      return NextResponse.json(
-        {
-          error: error.message.includes('Invalid ID')
-            ? 'Invalid person ID'
-            : 'Validation failed',
-          details: error.message,
-        },
-        { status: 400 }
-      );
-    }
-
-    // Check if person not found
-    if (error instanceof Error && error.message.includes('Person not found')) {
-      return NextResponse.json({ error: 'Person not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(
-      {
-        error: 'Failed to update person',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return apiError(error);
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
+export async function DELETE(_request: Request, { params }: Context): Promise<Response> {
   try {
     const { id } = await params;
-    // Delete the person
-    await deletePerson(id);
-
-    return NextResponse.json({ status: 'ok' });
+    const deleted = await deletePerson(id);
+    if (!deleted) {
+      return Response.json({ error: { message: 'Person not found.' } }, { status: 404 });
+    }
+    return json({ id });
   } catch (error) {
-    console.error('Error deleting person:', error);
-
-    // Check if it's a validation error (invalid ID format)
-    if (error instanceof Error && error.message.includes('Invalid ID')) {
-      return NextResponse.json(
-        {
-          error: 'Invalid person ID',
-          details: error.message,
-        },
-        { status: 400 }
-      );
-    }
-
-    // Check if person not found
-    if (error instanceof Error && error.message.includes('Person not found')) {
-      return NextResponse.json({ error: 'Person not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(
-      {
-        error: 'Failed to delete person',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return apiError(error);
   }
 }
