@@ -18,11 +18,11 @@ export function PageHeading({
   return (
     <div className={cn('flex flex-col gap-3', className)}>
       {eyebrow && (
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.22em] text-cobalt">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-evergreen">
           {eyebrow}
         </p>
       )}
-      <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+      <h1 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
         {title}
       </h1>
       {description && (

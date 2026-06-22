@@ -26,13 +26,13 @@ export function Field({
         className="flex items-center gap-1 text-sm font-medium text-ink"
       >
         {label}
-        {required && <span className="text-vermilion">*</span>}
+        {required && <span className="text-danger">*</span>}
       </label>
       {children}
       {hint && !error && (
         <p className="text-xs text-muted-foreground">{hint}</p>
       )}
-      {error && <p className="text-xs font-medium text-vermilion">{error}</p>}
+      {error && <p className="text-xs font-medium text-danger">{error}</p>}
     </div>
   );
 }

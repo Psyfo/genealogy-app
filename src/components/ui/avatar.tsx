@@ -1,13 +1,13 @@
 import { cn } from '@/lib/utils';
 
-// Keyline tiles, each a saturated ground with a legible foreground.
+// Soft tiles, each a warm ground with a legible foreground.
 const TILES = [
-  'bg-cobalt text-primary-foreground',
-  'bg-vermilion text-primary-foreground',
-  'bg-emerald text-primary-foreground',
-  'bg-magenta text-primary-foreground',
-  'bg-marigold text-ink',
-  'bg-sky text-ink',
+  'bg-evergreen text-primary-foreground',
+  'bg-amber text-ink',
+  'bg-terracotta text-primary-foreground',
+  'bg-sage text-primary-foreground',
+  'bg-clay text-primary-foreground',
+  'bg-evergreen-deep text-primary-foreground',
 ] as const;
 
 function tileFor(seed: string): string {
@@ -28,7 +28,7 @@ export function Avatar({ initials, seed, className }: AvatarProps) {
   return (
     <span
       className={cn(
-        'inline-flex select-none items-center justify-center rounded-sm border-2 border-ink font-display font-bold uppercase leading-none',
+        'inline-flex select-none items-center justify-center rounded-full font-display font-semibold uppercase leading-none ring-1 ring-black/5',
         tileFor(seed),
         className,
       )}
