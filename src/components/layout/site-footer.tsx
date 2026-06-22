@@ -1,19 +1,20 @@
-import { NdebeleBand } from './ndebele-band';
+import { BrandMark } from './brand-mark';
+import { SITE } from '@/lib/site';
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24">
-      <NdebeleBand height={10} offset={2} />
-      <div className="border-t-2 border-ink bg-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p className="font-display text-base font-bold uppercase tracking-tight text-ink">
-            Mahlangu
-          </p>
-          <p className="max-w-md text-pretty">
-            A living record of the family, drawn in the geometry of Ndebele art.
-            The names shown are illustrative sample data — replace them with your own.
-          </p>
+    <footer className="mt-24 border-t border-hairline bg-paper">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="flex items-center gap-2.5">
+          <BrandMark className="h-6 w-6" />
+          <span className="font-display text-lg font-semibold tracking-tight">
+            {SITE.name}
+          </span>
         </div>
+        <p className="max-w-md text-sm text-muted-foreground text-pretty">
+          {SITE.tagline} A calm, private place to gather your family’s names,
+          dates and stories.
+        </p>
       </div>
     </footer>
   );

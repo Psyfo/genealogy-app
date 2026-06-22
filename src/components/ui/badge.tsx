@@ -3,18 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 text-xs font-medium leading-none',
+  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium leading-none',
   {
     variants: {
       tone: {
-        neutral: 'border-ink/20 bg-sand text-ink-soft',
-        ink: 'border-ink bg-ink text-bone',
-        cobalt: 'border-cobalt/30 bg-cobalt/10 text-cobalt-deep',
-        marigold: 'border-marigold/50 bg-marigold/20 text-ink',
-        emerald: 'border-emerald/30 bg-emerald/10 text-emerald',
-        vermilion: 'border-vermilion/30 bg-vermilion/10 text-vermilion',
-        magenta: 'border-magenta/30 bg-magenta/10 text-magenta',
-        outline: 'border-ink bg-transparent text-ink',
+        neutral: 'border-hairline bg-parchment text-ink-soft',
+        ink: 'border-ink bg-ink text-ivory',
+        evergreen: 'border-evergreen/25 bg-evergreen/10 text-evergreen-deep',
+        amber: 'border-amber/40 bg-amber/15 text-clay',
+        sage: 'border-sage/30 bg-sage/15 text-evergreen-deep',
+        terracotta: 'border-terracotta/30 bg-terracotta/10 text-clay',
+        outline: 'border-hairline bg-transparent text-ink-soft',
       },
     },
     defaultVariants: { tone: 'neutral' },

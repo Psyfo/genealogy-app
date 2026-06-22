@@ -16,10 +16,10 @@ export function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content>) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink/45 backdrop-blur-[2px] [animation:overlay-in_.15s_ease-out]" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink/40 backdrop-blur-[2px] [animation:overlay-in_.15s_ease-out]" />
       <DialogPrimitive.Content
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border-2 border-ink bg-bone p-6 shadow-block-lg outline-none',
+          'fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border border-hairline bg-ivory p-6 shadow-soft-lg outline-none',
           'max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg',
           '[animation:content-in_.18s_var(--ease-out-quart)]',
           className,
@@ -28,7 +28,7 @@ export function DialogContent({
       >
         {children}
         <DialogPrimitive.Close
-          className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-sm border-2 border-transparent text-ink-soft transition-colors hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt"
+          className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-parchment hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-evergreen"
           aria-label="Close"
         >
           <X className="size-4" />
