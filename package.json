@@ -1,8 +1,8 @@
 {
-  "name": "mahlangu-genealogy",
+  "name": "kindred",
   "version": "1.0.0",
   "private": true,
-  "description": "A living record of the Mahlangu family — a Neo4j-backed genealogy app with an Ndebele-inspired design language.",
+  "description": "Kindred — build and keep your family tree. A multi-tenant, Neo4j-backed genealogy app.",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -19,6 +19,7 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "dotenv": "17.2.1",
+    "jose": "6.2.3",
     "lucide-react": "1.21.0",
     "neo4j-driver": "6.1.0",
     "next": "16.2.9",
