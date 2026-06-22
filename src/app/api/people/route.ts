@@ -1,59 +1,23 @@
-import { NextResponse } from "next/server";
-import { createPerson, getAllPeople } from "@/lib/people";
+import { apiError, json } from '@/lib/api';
+import { createPerson, listPeople } from '@/lib/people';
 
-export async function GET() {
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request): Promise<Response> {
   try {
-    const people = await getAllPeople();
-    return NextResponse.json(people);
+    const search = new URL(request.url).searchParams.get('search') ?? undefined;
+    return json(await listPeople(search));
   } catch (error) {
-    console.error('Error in GET /api/people:', error);
-    return NextResponse.json(
-      { 
-        error: 'Failed to fetch people',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
+    return apiError(error);
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: Request): Promise<Response> {
   try {
-    const data = await req.json();
-    
-    // Validate request body
-    if (!data || typeof data !== 'object') {
-      return NextResponse.json(
-        { error: 'Invalid request body' },
-        { status: 400 }
-      );
-    }
-
-    const person = await createPerson(data);
-    return NextResponse.json({ 
-      status: 'ok', 
-      person 
-    });
+    const body = await request.json();
+    return json(await createPerson(body), 201);
   } catch (error) {
-    console.error('Error in POST /api/people:', error);
-    
-    // Check if it's a validation error
-    if (error instanceof Error && error.message.includes('Validation failed')) {
-      return NextResponse.json(
-        { 
-          error: 'Validation failed',
-          details: error.message
-        },
-        { status: 400 }
-      );
-    }
-    
-    return NextResponse.json(
-      { 
-        error: 'Failed to create person',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
+    return apiError(error);
   }
 }

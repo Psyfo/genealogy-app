@@ -1,23 +1,13 @@
-import { NextResponse } from 'next/server';
+import { apiError, json } from '@/lib/api';
+import { getGraph } from '@/lib/graph';
 
-import { runQuery } from '@/lib/neo4';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  // Fetch nodes (people)
-  const nodes = await runQuery<{ id: string; name: string }>(`
-    MATCH (p:Person)
-    RETURN id(p) AS id, p.name AS name
-  `);
-
-  // Fetch edges (relationships)
-  const links = await runQuery<{
-    source: string;
-    target: string;
-    type: string;
-  }>(`
-    MATCH (a:Person)-[r]->(b:Person)
-    RETURN id(a) AS source, id(b) AS target, type(r) AS type
-  `);
-
-  return NextResponse.json({ nodes, links });
+export async function GET(): Promise<Response> {
+  try {
+    return json(await getGraph());
+  } catch (error) {
+    return apiError(error);
+  }
 }
