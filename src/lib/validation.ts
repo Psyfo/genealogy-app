@@ -39,8 +39,8 @@ export const personSchema = z.object({
   deathDate: optionalDate,
   deathPlace: optionalText(160),
   occupation: optionalText(120),
-  // isithakazelo / clan praise names — central to Nguni & Ndebele identity.
-  clanPraise: optionalText(400),
+  // An optional family motto, honorific, or praise name.
+  motto: optionalText(300),
   bio: optionalText(2000),
   photoUrl: z.preprocess(blankToUndefined, z.url().optional()),
   createdAt: z.string(),
@@ -106,6 +106,28 @@ export const relationshipInputSchema = z
       });
     }
   });
+
+// ── Accounts ────────────────────────────────────────────────────────────────
+
+const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email('Enter a valid email address.'));
+
+export const signupSchema = z.object({
+  name: z.string().trim().min(1, 'Your name is required.').max(80),
+  email: emailSchema,
+  password: z.string().min(8, 'Use at least 8 characters.').max(200),
+});
+
+export const loginSchema = z.object({
+  email: emailSchema,
+  password: z.string().min(1, 'Enter your password.'),
+});
+
+export type SignupInput = z.input<typeof signupSchema>;
+export type LoginInput = z.input<typeof loginSchema>;
 
 export type Person = z.infer<typeof personSchema>;
 export type PersonInput = z.input<typeof personInputSchema>;
