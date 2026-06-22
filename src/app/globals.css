@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+/*
+  Mahlangu — "Ndebele Modernism"
+  ------------------------------------------------------------------
+  A design language drawn from Ndebele mural art and beadwork: a warm bone
+  ground, saturated primaries, and the signature black keyline that outlines
+  every shape. Hard edges, confident colour blocks, generous structure.
+*/
+
+@theme {
+  /* Structure */
+  --color-ink: #15110d;
+  --color-ink-soft: #4a4035;
+  --color-bone: #f5efe2;
+  --color-paper: #fffdf8;
+  --color-sand: #ece3d1;
+  --color-hairline: #ddd1ba;
+
+  /* Ndebele palette — saturated, keyline-ready */
+  --color-cobalt: #1f44c2;
+  --color-cobalt-deep: #16329a;
+  --color-marigold: #f3b324;
+  --color-vermilion: #df3b2c;
+  --color-emerald: #1b8f5d;
+  --color-magenta: #c3338a;
+  --color-sky: #6fb1da;
+
+  /* Semantic aliases */
+  --color-background: var(--color-bone);
+  --color-foreground: var(--color-ink);
+  --color-muted: var(--color-sand);
+  --color-muted-foreground: var(--color-ink-soft);
+  --color-card: var(--color-paper);
+  --color-border: var(--color-ink);
+  --color-primary: var(--color-cobalt);
+  --color-primary-foreground: #fbfaff;
+  --color-accent: var(--color-marigold);
+  --color-danger: var(--color-vermilion);
+
+  /* Type */
+  --font-display: var(--font-bricolage), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono-family), ui-monospace, 'JetBrains Mono', monospace;
+
+  /* Geometry — hard-edged, architectural */
+  --radius: 0.1875rem;
+  --radius-lg: 0.3125rem;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv05', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--color-marigold);
+    color: var(--color-ink);
+  }
+
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes content-in {
+    from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt);
+    outline-offset: 2px;
+  }
+}
+
+/* The keyline: the heavy black outline that defines every Ndebele form. */
+@utility keyline {
+  border-width: 2px;
+  border-color: var(--color-ink);
+}
+
+/* Hard offset shadows — the "cut paper" depth of the design language. */
+@utility shadow-block {
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+}
+@utility shadow-block-sm {
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+@utility shadow-block-lg {
+  box-shadow: 6px 6px 0 0 var(--color-ink);
+}
+@utility shadow-none-block {
+  box-shadow: 0 0 0 0 var(--color-ink);
+}
+
+/* Tabular figures for dates and lifespans. */
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
