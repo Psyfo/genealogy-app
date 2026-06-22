@@ -1,229 +1,126 @@
-# Genealogy App (Work in Progress)
+# Mahlangu
 
-An experimental genealogy visualizer that stores family data in a Neo4j graph database and renders an interactive force-directed graph in a Next.js (App Router) frontend.
+A living record of the Mahlangu family — a genealogy app that stores people and
+their relationships in a **Neo4j** graph and presents them through a **Next.js**
+interface drawn in the bold geometry of **Ndebele** art.
 
-> Status: **Actively evolving / WIP**. APIs, schema, and UI are subject to change. Not production-hardened.
+> The data that ships is an illustrative sample family (four invented
+> generations rooted in KwaNdebele and Pretoria). Replace it with your own.
 
-## Goals
+## Why a graph
 
-- Model people and family relationships as a property graph.
-- Expose clean API endpoints (people, relationships, graph views).
-- Provide interactive visualization (pan, zoom, hover highlighting).
-- Build a foundation for ancestor/descendant traversal, analytics, and future editing UI.
+Family history *is* a graph: people connected by birth and marriage across
+generations. So relationships live only as edges in Neo4j and everything derived
+— siblings, ancestors, descendants, generations — is found by walking the graph,
+never copied onto nodes or kept in sync by hand.
 
-## Implemented So Far
+```
+(parent)-[:PARENT_OF {role}]->(child)
+(a)-[:MARRIED_TO {status, since, until}]-(b)
+```
 
-- Next.js (App Router) + TypeScript project scaffold.
-- Neo4j driver integration with typed query helper (`runQuery`).
-- People CRUD (currently: list + create).
-- Relationship creation (parent, married, sibling variants internally mapped).
-- Ancestors / descendants API endpoints (depth parameter supported).
-- Seed script to populate sample dataset.
-- Force-directed 2D graph visualization (`react-force-graph-2d`) with:
-  - Custom node coloring
-  - Hover highlighting
-  - Label pills
-  - Arrowed relationship links
-- Basic logging for DB connectivity and API route diagnostics.
-- Improved TypeScript safety (removal of explicit `any`, safer Record usage).
+A `:Person` node holds only intrinsic facts (names, dates, places, occupation,
+clan praise, a short story). Siblings are people who share a parent; ancestors
+and descendants are variable-length `PARENT_OF` walks.
 
-## Tech Stack
+## Stack
 
-- Framework: **Next.js (App Router)** + React 18
-- Language: **TypeScript**
-- Database: **Neo4j** (Aura / local)
-- Visualization: **react-force-graph-2d** (Canvas rendering)
-- Styling: **Tailwind CSS**
-- Runtime / Tooling: Node.js, `tsx` for running TypeScript scripts (seeding)
+- **Next.js 16** (App Router) + **React 19** + **TypeScript** (strict)
+- **Neo4j** graph database via `neo4j-driver`
+- **Zod** for validation — the single source of truth for domain types
+- **Tailwind CSS v4** (CSS-first tokens) — the "Ndebele Modernism" design system
+- **react-force-graph-2d** for the interactive tree (canvas)
 
-## Quick Start
+## Getting started
 
-### 1. Install Dependencies
+### 1. Install
 
 ```bash
 npm install
 ```
 
-### 2. Set Up Neo4j Database
+### 2. Run Neo4j
 
-You need a running Neo4j database. You can use:
-
-- **Neo4j Desktop** (local development)
-- **Neo4j Aura** (cloud)
-- **Docker** (see below)
-
-### 3. Environment Variables
-
-Create a `.env.local` file in the root directory:
+Any local instance works (Neo4j Desktop, Docker, etc.). For a single instance
+use the direct `bolt://` scheme — `neo4j://` expects cluster routing and will
+fail to connect locally.
 
 ```bash
-# Neo4j Database Configuration
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=your_password_here
-
-# Next.js Configuration
-NEXT_PUBLIC_APP_NAME=Family Tree
-NEXT_PUBLIC_APP_DESCRIPTION=Discover Your Heritage
+docker run --name neo4j-mahlangu -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/password -d neo4j:latest
 ```
 
-### 4. Start the Application
+### 3. Configure env
 
 ```bash
-npm run dev
+cp .env.example .env.local
+# then edit NEO4J_* to match your instance
 ```
 
-### 5. Seed Sample Data (Optional)
+### 4. Seed the sample family
 
 ```bash
-npm run seed
+npm run seed     # applies constraints, clears the graph, inserts the sample family
 ```
 
-## Docker Setup (Alternative)
-
-If you prefer using Docker for Neo4j:
+### 5. Develop
 
 ```bash
-# Start Neo4j with Docker
-docker run \
-  --name neo4j-genealogy \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/password \
-  -d neo4j:latest
-
-# Then use these environment variables:
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=password
+npm run dev      # http://localhost:3000
 ```
 
-## Architecture Overview
+## Scripts
 
-```bash
-/src
-  /app
-    /api
-      /people
-        route.ts        (GET all, POST create)
-        [id]/
-          ancestors/    (GET ancestors?depth=n)
-          descendants/  (GET descendants?depth=n)
-    page.tsx            (Home page with graph)
-  /components
-    GraphViewer.tsx
-  /lib
-    neo4.ts             (Neo4j driver + query runner)
-    people.ts           (People operations)
-    relationships.ts    (Relationship queries)
-    seed.ts             (Seed script)
-  /types
-    person.ts
-    relationship.ts
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint |
+| `npm run db:init` | Verify connection and apply constraints/indexes |
+| `npm run seed` | Reset and seed the sample family |
+
+## Project structure
+
+```
+src/
+  app/                 routes (home, /people, /people/[id], /tree, /about) + /api
+  components/
+    ui/                primitives (button, dialog, input, badge, avatar, field)
+    layout/            header, footer, the Ndebele band motif, page heading
+    people/            cards, form, explorer, relatives, relationship manager
+    tree/              the force-graph family tree (client)
+  lib/
+    neo4j/             lazy driver + schema/constraints
+    validation.ts      Zod schemas → inferred types
+    people.ts          person CRUD (parameterised Cypher)
+    relationships.ts   edges + derived parents/siblings/spouses/ancestors
+    graph.ts           graph projection + generation layout
+    format.ts          name/date/age helpers (shared client + server)
+  scripts/             init-db, seed
 ```
 
-## Data Model (Current)
+## API
 
-Node (Label: `Person`)
+All routes return `{ data }` on success and `{ error: { message, issues? } }`
+on failure. Validation errors are `400`, relationship cycles `409`.
 
-- id (string)
-- name (string)
-- birthYear? (number)
-- deathYear? (number)
-- gender? (string) – used in seed data
+| Method | Route | |
+| --- | --- | --- |
+| `GET` / `POST` | `/api/people` | list (`?search=`) / create |
+| `GET` / `PATCH` / `DELETE` | `/api/people/[id]` | read (with relatives) / update / delete |
+| `GET` | `/api/people/[id]/ancestors?depth=n` | ancestor walk |
+| `GET` | `/api/people/[id]/descendants?depth=n` | descendant walk |
+| `POST` / `DELETE` | `/api/relationships` | add / remove a parent or marriage edge |
+| `GET` | `/api/graph` | nodes + links for the tree |
 
-Relationships
+## CI
 
-- `PARENT_OF` (directional)
-- `MARRIED_TO` (stored bidirectionally as two directed edges)
-- (Planned) `SIBLING_OF`, derived paths, etc.
+Every push to `master` and every pull request runs type-check, lint and build
+via GitHub Actions (`.github/workflows/ci.yml`). `master` is protected: changes
+land through PRs with a passing build.
 
-## Seeding Data
+## Conventions
 
-1. Set environment variables (see below).
-2. Run:
-
-   ```bash
-   npm run seed
-   ```
-
-3. The script:
-   - Connects & logs timing.
-   - Clears existing graph (`MATCH (n) DETACH DELETE n`).
-   - Inserts sample people and relationships.
-
-## Environment Variables
-
-Create `.env.local` (never commit secrets):
-
-```bash
-NEO4J_URI=neo4j+s://<your-aura-instance>.databases.neo4j.io
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=<your-password>
-```
-
-For local Neo4j:
-
-```bash
-NEO4J_URI=bolt://127.0.0.1:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=<local-password>
-```
-
-(If encryption issues arise locally, driver config can set `encrypted: 'ENCRYPTION_OFF'`.)
-
-## Running the App
-
-```bash
-npm install
-npm run dev
-```
-
-Navigate to: <http://localhost:3000>
-
-## API Highlights
-
-- `GET /api/people`
-- `POST /api/people` (body: { id, name, birthYear?, deathYear? })
-- `GET /api/people/:id/ancestors?depth=n`
-- `GET /api/people/:id/descendants?depth=n`
-- (Planned) POST relationship endpoints returning updated graph fragments.
-
-## Graph Visualization
-
-Rendered with `react-force-graph-2d`:
-
-- Custom node painter adds color + pill labels.
-- Hover state amplifies node radius, link width, and color.
-- Future enhancements: filtering, legend, clustering, dynamic layout controls.
-
-## Roadmap (Planned)
-
-- Input forms to add/edit people directly in UI.
-- Derive sibling relationships algorithmically.
-- Caching layer or persisted projections for performance.
-- Unit/integration tests for graph traversal functions.
-- Authentication & multi-user trees.
-- Export / import (GEDCOM or JSON).
-- UI editing of relationships (drag to connect).
-- Accessibility improvements (keyboard navigation, ARIA).
-
-## Development Notes
-
-- Avoid committing real credentials.
-- Prefer parameterized Cypher (`$param`) for all queries (already followed).
-- Strict TypeScript mode encouraged—continue refining types for graph response transforms.
-- Logging currently minimal—can add structured logger if needed later.
-
-## Contributing (Future)
-
-Not open for external contributions yet; internal iteration phase. Will add guidelines later.
-
-## License
-
-(Choose a license – MIT? Pending.)
-
-## Disclaimer
-
-This is a **work in progress** prototype. Expect rapid changes, breaking schema updates, and incomplete validation. Not production-ready.
-
----
+Engineering conventions for the project live in [`rules.md`](./rules.md).

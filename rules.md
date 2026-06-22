@@ -355,6 +355,6 @@ Before submitting code, verify:
 
 ---
 
-**Last Updated**: December 14, 2025
-**Project**: Genealogy App
-**Stack**: Next.js 15, TypeScript, Neo4j
+**Last Updated**: June 22, 2026
+**Project**: Mahlangu (genealogy)
+**Stack**: Next.js 16, React 19, TypeScript, Neo4j, Zod, Tailwind CSS v4
